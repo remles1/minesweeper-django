@@ -1,7 +1,6 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
-from django.shortcuts import render
 from django.views.generic import TemplateView
+
+from minesweeper.config import difficulty_mapping
 
 
 class IndexView(TemplateView):
@@ -10,6 +9,15 @@ class IndexView(TemplateView):
 
 class GameView(TemplateView):
     template_name = "minesweeper/game.html"
-    #extra_context = {"images": }
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
+        difficulty = self.kwargs.get('difficulty')
+
+        if difficulty not in ["beginner", "intermediate", "expert"]:
+            difficulty = "beginner"
+
+        context['difficulty_settings'] = difficulty_mapping[difficulty]
+
+        return context

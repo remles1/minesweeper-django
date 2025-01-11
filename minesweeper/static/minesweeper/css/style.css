@@ -1,11 +1,11 @@
 #board {
   display: grid;
-  grid-template-columns: repeat(16, 25px); /* Adjust for grid size (e.g., 9x9) and cell size (e.g., 25px) */
-  grid-template-rows: repeat(16, 25px);    /* Same as above, adjust as needed */
-  gap: 0;                             /* Space between cells (optional) */
-  border: 2px solid #7b7b7b;             /* Border for the board (optional) */
-  width: fit-content;                    /* Makes the board fit the content */
-  user-select: none;                     /* Prevents accidental text selection */
+  grid-template-columns: repeat(16 , 25px);
+  grid-template-rows: repeat(16, 25px);
+  gap: 0;
+  border: 2px solid #7b7b7b;
+  width: fit-content;
+  user-select: none;
 }
 
 .cell {

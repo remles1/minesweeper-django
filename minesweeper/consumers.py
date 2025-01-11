@@ -2,6 +2,7 @@ import json
 
 from channels.generic.websocket import WebsocketConsumer
 
+from minesweeper.config import difficulty_mapping
 from minesweeper.game.minesweepergame import MinesweeperGame
 
 
@@ -21,13 +22,17 @@ class GameConsumer(WebsocketConsumer):
         #     self.close()  # Close the connection if not authenticated
         session = self.scope["session"]
         user = self.scope["user"]
-        self.accept()
 
+        self.accept()
+        difficulty = self.scope['url_route']['kwargs']['difficulty']
+
+        difficulty_settings = difficulty_mapping[difficulty]
+        #print(difficulty_settings)
         self.game = MinesweeperGame(
             player=user,
-            width=16,
-            height=16,
-            mine_count=40
+            width=difficulty_settings['width'],
+            height=difficulty_settings['height'],
+            mine_count=difficulty_settings['mine_count']
         )
         user_board_json = json.dumps(self.game.user_board)
         self.send(text_data=json.dumps({
@@ -52,7 +57,7 @@ class GameConsumer(WebsocketConsumer):
             self.game.cell_right_clicked(y, x)
 
         user_board_json = json.dumps(self.game.user_board)
-        #print(user_board_json)
+        # print(user_board_json)
         self.send(text_data=json.dumps({
             "message": user_board_json
         }))

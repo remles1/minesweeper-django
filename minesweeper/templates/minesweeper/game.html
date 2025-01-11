@@ -2,7 +2,9 @@
 {% load i18n %}
 
 {% block headblock %}
-    {% load static %}
+
+
+        {% load static %}
         <link rel="stylesheet" href="{% static 'minesweeper/css/style.css' %}">
 
         <link rel="preload" href="{% static 'minesweeper/images/cell-0.svg'%}" as="image">
@@ -20,6 +22,18 @@
         <link rel="preload" href="{% static 'minesweeper/images/cell-mine.svg' %}" as="image">
         <link rel="preload" href="{% static 'minesweeper/images/cell-mine-exploded.svg' %}" as="image">
 
+        <style>
+            #board {
+              display: grid;
+              grid-template-columns: repeat({{ difficulty_settings.width }} , {{ difficulty_settings.cell_width }});
+              grid-template-rows: repeat({{ difficulty_settings.height }}, {{ difficulty_settings.cell_width }});
+              gap: 0;
+              border: 2px solid #7b7b7b;
+              width: fit-content;
+              user-select: none;
+            }
+        </style>
+
     {% endblock %}
 
 {% block maincontent %}
@@ -36,7 +50,7 @@
 
 {% block scriptblock %}
     <script>
-        const socket = new WebSocket('ws://localhost:8000/ws/game/');
+        const socket = new WebSocket('ws://localhost:8000/ws/game/' + '{{ difficulty_settings.name }}');
 
 
         let user_board_dict = {

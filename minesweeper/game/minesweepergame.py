@@ -179,7 +179,7 @@ class MinesweeperGame:
                     if dy == y and dx == x:
                         self.user_board[dy][dx] = str(self.logic_board[dy][dx])
                         self._cells_opened += 1
-                        print(f"this should be zero: {str(self.logic_board[dy][dx])}")
+                        #print(f"this should be zero: {str(self.logic_board[dy][dx])}")
 
                     self.open_cells_recursively(dy, dx)
 
@@ -212,11 +212,14 @@ class MinesweeperGame:
                     if dy == y and dx == x:
                         continue
 
+                    if self.logic_board[dy][dx] == -1:
+                        self.on_lose(dy,dx)
+
                     if self.user_board[dy][dx] == "c":
                         self.open_cells_recursively(dy, dx)
 
     def check_win(self):
-        print(self._cells_opened)
+        print(f"_cells_opened: {self._cells_opened}")
         if self._cells_opened == (self.width * self.height - self.mine_count):
             return True
         return False

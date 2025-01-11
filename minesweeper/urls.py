@@ -7,6 +7,5 @@ app_name = 'minesweeper'
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
-    path("game/", GameView.as_view(), name="game")
-
+    path("game/<str:difficulty>", GameView.as_view(), name="game"),
 ]
