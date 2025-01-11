@@ -1,0 +1,79 @@
+#board {
+  display: grid;
+  grid-template-columns: repeat(16, 25px); /* Adjust for grid size (e.g., 9x9) and cell size (e.g., 25px) */
+  grid-template-rows: repeat(16, 25px);    /* Same as above, adjust as needed */
+  gap: 0;                             /* Space between cells (optional) */
+  border: 2px solid #7b7b7b;             /* Border for the board (optional) */
+  width: fit-content;                    /* Makes the board fit the content */
+  user-select: none;                     /* Prevents accidental text selection */
+}
+
+.cell {
+  background-size: cover;
+  /*border: 3px outset #e0e0e0;          !* 3D button effect (optional) *!*/
+  width: 25px;                          /* Cell width (match grid-template-columns) */
+  height: 25px;                         /* Cell height (match grid-template-rows) */
+  /*text-align: center;*/
+  /*vertical-align: middle;*/
+  cursor: pointer;                     /* Show pointer on hover */
+}
+
+.cell-closed{
+    background-image: url("../images/cell-closed.svg");
+}
+
+.cell-flagged{
+    background-image: url("../images/cell-flagged.svg");
+}
+
+.cell-flagged-wrong{
+    background-image: url("../images/cell-flagged-wrong.svg");
+}
+
+.cell-0{
+    background-image: url("../images/cell-0.svg");
+}
+
+.cell-pressed{
+    background-image: url("../images/cell-0.svg");
+}
+
+.cell-1{
+    background-image: url("../images/cell-1.svg");
+}
+
+.cell-2{
+    background-image: url("../images/cell-2.svg");
+}
+
+.cell-3{
+    background-image: url("../images/cell-3.svg");
+}
+
+.cell-4{
+    background-image: url("../images/cell-4.svg");
+}
+
+.cell-5{
+    background-image: url("../images/cell-5.svg");
+}
+
+.cell-6{
+    background-image: url("../images/cell-6.svg");
+}
+
+.cell-7{
+    background-image: url("../images/cell-7.svg");
+}
+
+.cell-8{
+    background-image: url("../images/cell-8.svg");
+}
+
+.cell-mine{
+    background-image: url("../images/cell-mine.svg");
+}
+
+.cell-mine-exploded{
+    background-image: url("../images/cell-mine-exploded.svg");
+}

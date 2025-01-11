@@ -1,0 +1,159 @@
+{% extends "minesweeper/base.html" %}
+{% load i18n %}
+
+{% block headblock %}
+    {% load static %}
+        <link rel="stylesheet" href="{% static 'minesweeper/css/style.css' %}">
+
+        <link rel="preload" href="{% static 'minesweeper/images/cell-0.svg'%}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-1.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-2.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-3.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-4.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-5.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-6.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-7.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-8.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-closed.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-flagged.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-flagged-wrong.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-mine.svg' %}" as="image">
+        <link rel="preload" href="{% static 'minesweeper/images/cell-mine-exploded.svg' %}" as="image">
+
+    {% endblock %}
+
+{% block maincontent %}
+
+<div class="d-flex h-100 w-100 justify-content-center align-items-center">
+    <div id="board">
+
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block scriptblock %}
+    <script>
+        const socket = new WebSocket('ws://localhost:8000/ws/game/');
+
+
+        let user_board_dict = {
+            "c": "cell-closed",
+            "0": "cell-0",
+            "f": "cell-flagged",
+            "fw": "cell-flagged-wrong",
+            "m": "cell-mine",
+            "me": "cell-mine-exploded",
+            "1": "cell-1",
+            "2": "cell-2",
+            "3": "cell-3",
+            "4": "cell-4",
+            "5": "cell-5",
+            "6": "cell-6",
+            "7": "cell-7",
+            "8": "cell-8",
+            "pressed": "cell-pressed"
+        }
+
+        socket.onopen = function (e) {
+            console.log("WebSocket Connected!");
+
+        };
+
+        socket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            let user_board = JSON.parse(data["message"])
+            user_board = user_board.map(row =>
+                row.map(cell => user_board_dict[cell])
+            )
+            //console.log(user_board)
+            render_user_board(user_board)
+        };
+
+        socket.onclose = function (e) {
+            console.log("WebSocket Disconnected!");
+        };
+
+        function render_user_board(user_board){
+            const board = document.getElementById("board");
+            board.innerHTML = '';
+            for(let i = 0; i < user_board.length; i++){
+                for(let j = 0; j < user_board[0].length; j++){
+                    let cell = document.createElement("div");
+                    cell.id = "id" + i + "-" + j;
+                    cell.className = "cell " + user_board[i][j];
+
+                    cell.addEventListener("mousedown",cellMouseDown);
+                    cell.addEventListener("mouseup",cellMouseUp);
+                    cell.addEventListener("mouseover",cellMouseOver);
+                    cell.addEventListener("mouseleave",cellMouseLeave);
+                    cell.addEventListener("contextmenu",cellRightClicked);
+
+                    board.appendChild(cell)
+                }
+            }
+        }
+
+        let leftPressed = false;
+        function cellMouseDown(event){
+            if(event.button !== 0) {
+                return;
+            }
+            leftPressed = true;
+            if(event.button === 0 && !this.classList.contains(user_board_dict["f"]) && !this.classList.contains(user_board_dict["0"])){
+                this.classList.add(user_board_dict["pressed"]);
+            }
+
+        }
+
+        function cellMouseOver(event){
+            event.preventDefault();
+            if(leftPressed){
+                this.classList.add(user_board_dict["pressed"]);
+            }
+        }
+
+        function cellMouseLeave(event){
+            event.preventDefault();
+            if(this.classList.contains(user_board_dict["pressed"])){
+                this.classList.remove(user_board_dict["pressed"]);
+            }
+        }
+
+        function cellMouseUp(event){
+            if(event.button !== 0) {
+                return;
+            }
+            leftPressed = false;
+
+            if(this.classList.contains(user_board_dict["0"])){
+                return;
+            }
+            const message = JSON.stringify({
+                btn: "l",
+                message: this.id.replace(/^id/,"")
+            })
+            socket.send(message)
+
+        }
+
+        function cellRightClicked(event){
+            event.preventDefault();
+            if(!this.classList.contains(user_board_dict["0"])){
+                this.classList.toggle(user_board_dict["c"]);
+                this.classList.toggle(user_board_dict["f"]);
+
+            const message = JSON.stringify({
+                btn: "r",
+                message: this.id.replace(/^id/,"")
+            })
+
+            socket.send(message)
+            }
+        }
+
+
+    </script>
+{% endblock %}

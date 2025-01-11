@@ -1,0 +1,17 @@
+{% extends "minesweeper/base.html" %}
+{% load i18n %}
+
+{% block maincontent %}
+
+<div class="d-flex">
+    {% if request.user.is_authenticated %}
+    <p>Welcome, {{ request.user.username }}!</p>
+{% else %}
+    <p>Please log in.</p>
+{% endif %}
+</div>
+
+
+
+{% endblock %}
+
