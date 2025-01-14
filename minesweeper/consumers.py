@@ -8,6 +8,7 @@ from minesweeper.game.minesweepergame import MinesweeperGame
 
 class GameConsumer(WebsocketConsumer):
     game: MinesweeperGame
+    _game_over: bool = False
 
     def connect(self):
         # session = self.scope["session"]
@@ -32,7 +33,8 @@ class GameConsumer(WebsocketConsumer):
             player=user,
             width=difficulty_settings['width'],
             height=difficulty_settings['height'],
-            mine_count=difficulty_settings['mine_count']
+            mine_count=difficulty_settings['mine_count'],
+            #seed=42
         )
         user_board_json = json.dumps(self.game.user_board)
         self.send(text_data=json.dumps({
@@ -41,7 +43,7 @@ class GameConsumer(WebsocketConsumer):
         ))
 
     def disconnect(self, close_code):
-        pass
+        print("test")
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -56,8 +58,17 @@ class GameConsumer(WebsocketConsumer):
         if text_data_json["btn"] == "r":
             self.game.cell_right_clicked(y, x)
 
+        if self.game.game_won:
+            self._game_over = True
+
+        if self.game.game_over and not self.game.game_won:
+            self._game_over = True
+
         user_board_json = json.dumps(self.game.user_board)
         # print(user_board_json)
         self.send(text_data=json.dumps({
             "message": user_board_json
         }))
+
+        if self._game_over:
+            self.close()
