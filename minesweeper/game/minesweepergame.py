@@ -16,6 +16,7 @@ class MinesweeperGame:
     game_over: bool
     game_won: bool
     _cells_opened: int = 0
+    seed: int
     """
         user_board values:
 
@@ -37,7 +38,7 @@ class MinesweeperGame:
         this can be used with a dict in the frontend to support theming
     """
 
-    def __init__(self, player: User, width: int, height: int, mine_count: int) -> None:
+    def __init__(self, player: User, width: int, height: int, mine_count: int, seed: int | None = None) -> None:
         self.player = player
         self.width = width
         self.height = height
@@ -45,6 +46,7 @@ class MinesweeperGame:
         self.time = 0
         self.game_over = False
         self.game_won = False
+        self.seed = seed
         self.logic_board = self.create_logic_board()
         self.traversed_board = self.create_traversed_board()
         self.user_board = self.create_user_board()
@@ -69,6 +71,9 @@ class MinesweeperGame:
                 logic_board (List[List[int]]): A 2D List that represents where the mines are located
 
         """
+        if self.seed is not None:
+            random.seed(self.seed)
+
         logic_board = [[0] * self.width for _ in range(self.height)]
 
         mines_left_to_put_on_board = self.mine_count
@@ -179,7 +184,7 @@ class MinesweeperGame:
                     if dy == y and dx == x:
                         self.user_board[dy][dx] = str(self.logic_board[dy][dx])
                         self._cells_opened += 1
-                        #print(f"this should be zero: {str(self.logic_board[dy][dx])}")
+                        # print(f"this should be zero: {str(self.logic_board[dy][dx])}")
 
                     self.open_cells_recursively(dy, dx)
 
@@ -212,8 +217,8 @@ class MinesweeperGame:
                     if dy == y and dx == x:
                         continue
 
-                    if self.logic_board[dy][dx] == -1:
-                        self.on_lose(dy,dx)
+                    if self.logic_board[dy][dx] == -1 and self.user_board[dy][dx] != "f":
+                        self.on_lose(dy, dx)
 
                     if self.user_board[dy][dx] == "c":
                         self.open_cells_recursively(dy, dx)
@@ -221,8 +226,26 @@ class MinesweeperGame:
     def check_win(self):
         print(f"_cells_opened: {self._cells_opened}")
         if self._cells_opened == (self.width * self.height - self.mine_count):
-            return True
-        return False
+            self.on_win()
+
+    def on_win(self):
+        for dy in range(self.height):
+            for dx in range(self.width):
+                if self.logic_board[dy][dx] == -1:
+                    self.user_board[dy][dx] = "f"
 
     def on_lose(self, y, x):
-        print("lost")
+        self.game_over = True
+        self.game_won = False
+        for dy in range(self.height):
+            for dx in range(self.width):
+                if self.logic_board[dy][dx] == -1:
+                    if self.user_board[dy][dx] == "f":
+                        continue
+                    self.user_board[dy][dx] = "m"
+
+                elif self.user_board[dy][dx] == "f":
+                    if self.logic_board[dy][dx] != -1:
+                        self.user_board[dy][dx] = 'fw'
+
+        self.user_board[y][x] = "me"
