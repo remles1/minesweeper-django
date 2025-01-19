@@ -1,44 +1,115 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     {% load static %}
-    <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    />
-    <title>{% block title %} Django Auth & Registration Templates {% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Minesweeper Mania {% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #343a40; /* Dark background */
+            color: #f8f9fa; /* Light text color */
+        }
+        .navbar {
+            background-color: #212529; /* Darker navbar background */
+            border-bottom: 1px solid #495057; /* Subtle border */
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+        .nav-link {
+            color: #adb5bd; /* Lighter text for links */
+        }
+        .nav-link:hover {
+            color: #00bcd4; /* Accent color on hover */
+        }
+        .btn-login {
+            background-color: #00bcd4; /* Accent color for login button */
+            color: #212529; /* Dark text on button */
+            border: none;
+        }
+        .btn-login:hover {
+            background-color: #008ba3; /* Darker shade on hover */
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .game-container {
+            background-color: #2c3338; /* Dark game container */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Subtle white shadow */
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #fff;
+        }
+        p {
+            color: #adb5bd;
+        }
+        footer {
+            margin-top: 50px;
+            padding: 20px 0;
+            background-color: #343a40;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #495057;
+        }
+
+    </style>
+    {% block headblock %}
+
+    {% endblock %}
 </head>
-
 <body>
-    <div id="header">
-    {% block header %}
-    <a href="/">{% trans "Home" %}</a> |
 
-    {% if user.is_authenticated %}
-        {% trans "Logged in" %}: {{ user.username }}
-        (<form style="display: inline" id="logout-form" method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">{% trans "Log out" %}</button>
-        </form> |
-        <a href="{% url 'password_change' %}">{% trans "Change password" %}</a>)
-    {% else %}
-       <a href="{% url 'login' %}">{% trans "Log in" %}</a>
-    {% endif %}
-    <hr />
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Minesweeper Mania</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Play</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/highscores">High Scores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/instructions">Instructions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+
+    <footer>
+        © 2023 Minesweeper Mania | Crafted in the Dark with <i class="bi bi-heart-fill" style="color: #e91e63;"></i> using Bootstrap
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scriptblock %}
+
     {% endblock %}
-    </div>
-
-    <div id="content">
-    {% block content %}{% endblock %}
-    </div>
-
-    <div id="footer">
-    {% block footer %}
-        <hr />
-    {% endblock %}
-    </div>
 </body>
-
 </html>

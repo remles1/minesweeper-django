@@ -38,10 +38,10 @@ class GameConsumer(WebsocketConsumer):
         self.send_user_board()
 
     def disconnect(self, close_code):
-        if self.game.game_over and not self.game.game_won:
-            return
-        model_game = Game(**vars(self.game))
-        model_game.save()
+        if self.game.game_over and self.game.game_won:
+            model_game = Game(**vars(self.game))
+            model_game.save()
+
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
