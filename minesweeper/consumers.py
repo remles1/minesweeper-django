@@ -1,14 +1,19 @@
 import json
+import os
+import random
 
 from channels.generic.websocket import WebsocketConsumer
+from django.contrib.auth.models import User
+from django.db.models import Model
 
 from minesweeper.config import difficulty_mapping
 from minesweeper.game.minesweepergame import MinesweeperGame
+from minesweeper.models import Game
 
 
 class GameConsumer(WebsocketConsumer):
+    user: User
     game: MinesweeperGame
-    _game_over: bool = False
 
     def connect(self):
         # session = self.scope["session"]
@@ -21,29 +26,22 @@ class GameConsumer(WebsocketConsumer):
         #     }))
         # else:
         #     self.close()  # Close the connection if not authenticated
-        session = self.scope["session"]
-        user = self.scope["user"]
+        self.user = self.scope["user"]
 
         self.accept()
+
         difficulty = self.scope['url_route']['kwargs']['difficulty']
 
         difficulty_settings = difficulty_mapping[difficulty]
-        #print(difficulty_settings)
-        self.game = MinesweeperGame(
-            player=user,
-            width=difficulty_settings['width'],
-            height=difficulty_settings['height'],
-            mine_count=difficulty_settings['mine_count'],
-            #seed=42
-        )
-        user_board_json = json.dumps(self.game.user_board)
-        self.send(text_data=json.dumps({
-            "message": user_board_json
-        }
-        ))
+
+        self.start_new_game(difficulty_settings)
+        self.send_user_board()
 
     def disconnect(self, close_code):
-        print("test")
+        if self.game.game_over and not self.game.game_won:
+            return
+        model_game = Game(**vars(self.game))
+        model_game.save()
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -58,17 +56,27 @@ class GameConsumer(WebsocketConsumer):
         if text_data_json["btn"] == "r":
             self.game.cell_right_clicked(y, x)
 
-        if self.game.game_won:
-            self._game_over = True
+        self.send_user_board()
 
-        if self.game.game_over and not self.game.game_won:
-            self._game_over = True
+        if self.game.game_over:
+            print(self.game.time_spent)
+            self.close()
 
+    def send_user_board(self):
         user_board_json = json.dumps(self.game.user_board)
-        # print(user_board_json)
         self.send(text_data=json.dumps({
             "message": user_board_json
-        }))
+        }
+        ))
+    def start_new_game(self, difficulty_settings):
+        self.game = MinesweeperGame(
+            player=self.user,
+            difficulty=difficulty_settings['name'],
+            width=difficulty_settings['width'],
+            height=difficulty_settings['height'],
+            mine_count=difficulty_settings['mine_count'],
+            seed=os.urandom(16).hex()
+        )
 
-        if self._game_over:
-            self.close()
+
+

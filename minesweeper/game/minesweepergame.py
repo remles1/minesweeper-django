@@ -1,22 +1,31 @@
+# TODO zmienic started session na poprzedni ruch
+
 import random
+from datetime import datetime
 from typing import List
 
 from django.contrib.auth.models import User
+from django.utils import timezone
+
+from minesweeper.models import Game
 
 
 class MinesweeperGame:
     player: User
+    difficulty: str
     width: int
     height: int
     mine_count: int
     logic_board: List[List[int]]
     user_board: List[List[str]]
     traversed_board: List[List[bool]]
-    time: int
+    time_started: datetime.date
+    time_spent: int
+    time_ended: datetime.date
     game_over: bool
     game_won: bool
     _cells_opened: int = 0
-    seed: int
+    seed: str
     """
         user_board values:
 
@@ -38,18 +47,65 @@ class MinesweeperGame:
         this can be used with a dict in the frontend to support theming
     """
 
-    def __init__(self, player: User, width: int, height: int, mine_count: int, seed: int | None = None) -> None:
+    def __init__(self, player: User, difficulty: str, width: int, height: int, mine_count: int,
+                 seed: str | None = None, calculate_boards: bool = True) -> None:
+        """Creating a new board, not coming back to one
+
+        Args:
+            player:
+            width:
+            height:
+            mine_count:
+            seed:
+        """
+
         self.player = player
+        self.difficulty = difficulty
         self.width = width
         self.height = height
         self.mine_count = mine_count
-        self.time = 0
+        self.time_started = timezone.now()
+        self.time_spent = 0
+        self.time_ended = None
         self.game_over = False
         self.game_won = False
         self.seed = seed
-        self.logic_board = self.create_logic_board()
-        self.traversed_board = self.create_traversed_board()
-        self.user_board = self.create_user_board()
+        if calculate_boards:
+            self.logic_board = self.create_logic_board()
+            self.traversed_board = self.create_traversed_board()
+            self.user_board = self.create_user_board()
+
+    @classmethod
+    def from_model(cls, model_instance):
+        """
+        Alternate constructor to create a MinesweeperGame instance from a Game model instance.
+
+        Args:
+            model_instance: An instance of the Game model.
+
+        Returns:
+            MinesweeperGame: An instance of MinesweeperGame initialized with data from the model.
+        """
+        obj = cls(
+            player=model_instance.player,
+            difficulty=model_instance.difficulty,
+            width=model_instance.width,
+            height=model_instance.height,
+            mine_count=model_instance.mine_count,
+            seed=model_instance.seed,
+            calculate_boards=False
+        )
+        # Set attributes directly from the model
+        obj.time_started = model_instance.time_started
+        obj.time_spent = model_instance.time_spent
+        obj.time_ended = model_instance.time_ended
+        obj.game_over = model_instance.game_over
+        obj.game_won = model_instance.game_won
+        obj.logic_board = model_instance.logic_board
+        obj.traversed_board = model_instance.traversed_board
+        obj.user_board = model_instance.user_board
+        obj._cells_opened = model_instance._cells_opened
+        return obj
 
     def create_logic_board(self) -> List[List[int]]:
         """Creates a 2D List that represents where the mines are located and .
@@ -136,6 +192,10 @@ class MinesweeperGame:
     def cell_left_clicked(self, y: int, x: int):
         if self.user_board[y][x] == "f":
             return
+        #  add to time spent playing the game
+        t_delta = timezone.now() - self.time_started
+        self.time_spent = int(t_delta.total_seconds() * 1000)
+
         cell_val = self.logic_board[y][x]
         if cell_val == -1:
             self.user_board[y][x] = "me"
@@ -150,7 +210,7 @@ class MinesweeperGame:
                 self.user_board[y][x] = f"{cell_val}"
                 self.traversed_board[y][x] = True
                 self._cells_opened += 1
-        print(self.check_win())
+        self.check_win()
 
     def cell_right_clicked(self, y: int, x: int):
         if self.user_board[y][x] == "c":
@@ -229,6 +289,9 @@ class MinesweeperGame:
             self.on_win()
 
     def on_win(self):
+        self.game_over = True
+        self.game_won = True
+        self.time_ended = timezone.now()
         for dy in range(self.height):
             for dx in range(self.width):
                 if self.logic_board[dy][dx] == -1:
@@ -237,6 +300,7 @@ class MinesweeperGame:
     def on_lose(self, y, x):
         self.game_over = True
         self.game_won = False
+        self.time_ended = timezone.now()
         for dy in range(self.height):
             for dx in range(self.width):
                 if self.logic_board[dy][dx] == -1:
