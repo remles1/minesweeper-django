@@ -15,8 +15,9 @@
   height: 25px;                         /* Cell height (match grid-template-rows) */
   /*text-align: center;*/
   /*vertical-align: middle;*/
-  cursor: pointer;                     /* Show pointer on hover */
 }
+
+
 
 .cell-closed{
     background-image: url("../images/cell-closed.svg");

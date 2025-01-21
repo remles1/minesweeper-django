@@ -32,6 +32,106 @@
               width: fit-content;
               user-select: none;
             }
+
+            .panel{
+                display: flex;
+                background: #c0c0c0;
+                flex: 1;
+                height: calc(25px*2);
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .image-button {
+                background: none; /* Remove default background */
+                border: none; /* Remove default border */
+                padding: 0; /* Remove default padding */
+                margin: 0; /* Remove default margin */
+                cursor: pointer; /* Change cursor to pointer */
+            }
+
+            .image-button img {
+                display: block; /* Remove inline spacing */
+                width: 100%; /* Optional: Set the image width */
+                height: auto; /* Optional: Maintain aspect ratio */
+            }
+
+            .counter{
+
+            }
+
+            .border_corners{
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+            }
+
+            .border_hor{
+                height: calc(11/16 * 25px);
+                width: auto;
+                flex: 1;
+                background-size: 100% 100%;
+
+                background-image: url("{% static 'minesweeper/images/border-hor.png' %}");
+            }
+
+            .border_vert{
+                width: calc(11/16 * 25px);
+                max-width: calc(11/16 * 25px);
+                height: auto;
+                flex: 1;
+                background-size: 100% 100%;
+
+                background-image: url("{% static 'minesweeper/images/border-vert.png' %}");
+            }
+
+            .corner_top_left{
+                width: calc(11/16 * 25px);
+                height: calc(11/16 * 25px);
+                background-size: 100% 100%;
+
+                background-image: url("{% static 'minesweeper/images/corner-top-left.png' %}");
+            }
+
+            .corner_top_right{
+                width: calc(11/16 * 25px);
+                height: calc(11/16 * 25px);
+                background-size: 100% 100%;
+
+                background-image: url("{% static 'minesweeper/images/corner-top-right.png' %}");
+            }
+
+            .t_left{
+                width: calc(11/16 * 25px);
+                height: calc(11/16 * 25px);
+                background-size: 100% 100%;
+
+                background-image: url("{% static 'minesweeper/images/t-left.png' %}");
+            }
+
+            .t_right{
+                width: calc(11/16 * 25px);
+                height: calc(11/16 * 25px);
+                background-size: 100% 100%;
+
+                background-image: url("{% static 'minesweeper/images/t-right.png' %}");
+            }
+
+            .corner_bottom_left{
+                width: calc(11/16 * 25px);
+                height: calc(11/16 * 25px);
+                background-size: 100% 100%;
+
+                background-image: url("{% static 'minesweeper/images/corner-bottom-left.png' %}");
+            }
+
+            .corner_bottom_right{
+                width: calc(11/16 * 25px);
+                height: calc(11/16 * 25px);
+                background-size: 100% 100%;
+
+                background-image: url("{% static 'minesweeper/images/corner-bottom-right.png' %}");
+            }
         </style>
 
     {% endblock %}
@@ -40,9 +140,39 @@
 
 <div class="game-container ">
     <div id="timer">0.000</div>
-    <div id="board">
+    <div id="game">
+        <div class="top_part">
+            <div class="border_corners">
+                <div class="corner_top_left"></div><div class="border_hor"></div><div class="corner_top_right"></div>
+            </div>
+            <div class="border_corners">
+                <div class="border_vert"></div>
+                    <div class="panel">
+                        <div id="mine_counter" class="counter">mines</div>
+                        <button class="image-button">
+                            <img src="{% static 'minesweeper/images/face-unpressed.png' %}">
+                        </button>
+                        <div if="seconds_counter" class="counter">seconds</div>
+                    </div>
+                <div class="border_vert"></div>
+            </div>
+        </div>
+        <div class="border_corners">
+            <div class="t_left"></div><div class="border_hor"></div><div class="t_right"></div>
+        </div>
+        <div class="border_corners">
+            <div class="border_vert"></div>
+            <div id="board">
+
+            </div>
+            <div class="border_vert"></div>
+        </div>
+        <div class="border_corners">
+            <div class="corner_bottom_left"></div><div class="border_hor"></div><div class="corner_bottom_right"></div>
+        </div>
 
     </div>
+
     <button id="toggleButton" class="btn btn-primary d-inline">Fast Mode: OFF</button>
 
 </div>
