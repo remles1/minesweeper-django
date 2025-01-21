@@ -43,7 +43,6 @@
     <div id="board">
 
     </div>
-    <button id="toggleButton" class="btn btn-primary d-inline">Fast Mode: OFF</button>
 
 </div>
 
@@ -57,40 +56,6 @@
         let firstClick = true;
         let startTime = null;
         let timerRunning = false;
-
-        // Function to get a cookie value by name
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-            return null;
-        }
-
-        function setCookie(name, value, days) {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            const expires = `expires=${date.toUTCString()}`;
-            document.cookie = `${name}=${value}; ${expires}; path=/`;
-        }
-
-
-        let fastMode = getCookie('fastMode') === 'true';
-
-
-        const fastModeButton = document.getElementById('toggleButton');
-
-        fastModeButton.textContent = `Fast Mode: ${fastMode ? "ON" : "OFF"}`;
-
-        // Add click event listener
-        fastModeButton.addEventListener('click', () => {
-            // Toggle the boolean value
-            fastMode = !fastMode;
-
-            // Update the button text
-            fastModeButton.textContent = `Fast Mode: ${fastMode ? "ON" : "OFF"}`;
-            setCookie('fastMode', fastMode, 7);
-        });
-
 
         let user_board_dict = {
             "c": "cell-closed",
@@ -192,24 +157,12 @@
             if(this.classList.contains(user_board_dict["0"])){
                 return;
             }
-
-            if(fastMode && this.classList.contains(user_board_dict["c"]) || this.classList.contains(user_board_dict["f"])){
-                const message = JSON.stringify({
-                btn: "r",
-                message: this.id.replace(/^id/,"")
-                })
-                socket.send(message)
-            }
-            else {
-                const message = JSON.stringify({
+            const message = JSON.stringify({
                 btn: "l",
                 message: this.id.replace(/^id/,"")
-                })
-                socket.send(message)
-            }
-
-
-            if(!fastMode && firstClick){
+            })
+            socket.send(message)
+            if(firstClick){
                 startTime =  performance.now()
                 timerRunning = true;
                 timer();
@@ -223,28 +176,12 @@
                 this.classList.toggle(user_board_dict["c"]);
                 this.classList.toggle(user_board_dict["f"]);
 
-            if(!fastMode){
-                const message = JSON.stringify({
+            const message = JSON.stringify({
                 btn: "r",
                 message: this.id.replace(/^id/,"")
-                })
-                socket.send(message)
-            }
-            else {
-                const message = JSON.stringify({
-                btn: "l",
-                message: this.id.replace(/^id/,"")
-                })
-                socket.send(message)
-            }
+            })
 
-            if(fastMode && firstClick){
-                startTime =  performance.now()
-                timerRunning = true;
-                timer();
-                firstClick = false;
-            }
-
+            socket.send(message);
             }
         }
 

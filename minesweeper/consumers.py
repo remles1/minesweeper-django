@@ -1,10 +1,9 @@
 import json
 import os
-import random
+from datetime import datetime
 
 from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth.models import User
-from django.db.models import Model
 
 from minesweeper.config import difficulty_mapping
 from minesweeper.game.minesweepergame import MinesweeperGame
@@ -42,8 +41,8 @@ class GameConsumer(WebsocketConsumer):
             model_game = Game(**vars(self.game))
             model_game.save()
 
-
     def receive(self, text_data):
+        #print(datetime.now())
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
         split_message = message.split('-')
@@ -59,15 +58,19 @@ class GameConsumer(WebsocketConsumer):
         self.send_user_board()
 
         if self.game.game_over:
-            print(self.game.time_spent)
+            #print(self.game.time_spent)
             self.close()
 
     def send_user_board(self):
         user_board_json = json.dumps(self.game.user_board)
         self.send(text_data=json.dumps({
+            "won": self.game.game_won,
+            "over": self.game.game_over,
+            "time": self.game.time_spent,
             "message": user_board_json
         }
         ))
+
     def start_new_game(self, difficulty_settings):
         self.game = MinesweeperGame(
             player=self.user,
@@ -77,6 +80,3 @@ class GameConsumer(WebsocketConsumer):
             mine_count=difficulty_settings['mine_count'],
             seed=os.urandom(16).hex()
         )
-
-
-

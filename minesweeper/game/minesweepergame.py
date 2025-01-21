@@ -64,7 +64,7 @@ class MinesweeperGame:
         self.width = width
         self.height = height
         self.mine_count = mine_count
-        self.time_started = timezone.now()
+        self.time_started = None
         self.time_spent = 0
         self.time_ended = None
         self.game_over = False
@@ -193,6 +193,8 @@ class MinesweeperGame:
         if self.user_board[y][x] == "f":
             return
         #  add to time spent playing the game
+        if self.time_started is None:
+            self.time_started = timezone.now()
         t_delta = timezone.now() - self.time_started
         self.time_spent = int(t_delta.total_seconds() * 1000)
 
@@ -284,7 +286,7 @@ class MinesweeperGame:
                         self.open_cells_recursively(dy, dx)
 
     def check_win(self):
-        print(f"_cells_opened: {self._cells_opened}")
+        #print(f"_cells_opened: {self._cells_opened}")
         if self._cells_opened == (self.width * self.height - self.mine_count):
             self.on_win()
 
