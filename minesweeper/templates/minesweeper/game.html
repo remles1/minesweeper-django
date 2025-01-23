@@ -27,6 +27,17 @@
                 --board-width: {{ difficulty_settings.width }};
                 --board-height: {{ difficulty_settings.height }};
                 --cell-width: {{ difficulty_settings.cell_width }};
+                --d-background: url("{% static 'minesweeper/images/d-background.svg' %}");
+                --d-0: url("{% static 'minesweeper/images/d-0.svg' %}");
+                --d-1: url("{% static 'minesweeper/images/d-1.svg' %}");
+                --d-2: url("{% static 'minesweeper/images/d-2.svg' %}");
+                --d-3: url("{% static 'minesweeper/images/d-3.svg' %}");
+                --d-4: url("{% static 'minesweeper/images/d-4.svg' %}");
+                --d-5: url("{% static 'minesweeper/images/d-5.svg' %}");
+                --d-6: url("{% static 'minesweeper/images/d-6.svg' %}");
+                --d-7: url("{% static 'minesweeper/images/d-7.svg' %}");
+                --d-8: url("{% static 'minesweeper/images/d-8.svg' %}");
+                --d-9: url("{% static 'minesweeper/images/d-9.svg' %}");
                 --border-hor-image: url("{% static 'minesweeper/images/border-hor.png' %}");
                 --border-vert-image: url("{% static 'minesweeper/images/border-vert.png' %}");
                 --corner-top-left-image: url("{% static 'minesweeper/images/corner-top-left.png' %}");
@@ -54,11 +65,19 @@
             <div class="border_corners">
                 <div class="border_vert"></div>
                     <div class="panel">
-                        <div id="mine_counter" class="counter">mines</div>
+                        <div id="mine_counter" class="counter">
+                            <div class="digits">
+                                <div class="digit"></div><div class="digit"></div><div class="digit"></div>
+                            </div>
+                        </div>
                         <button class="image-button">
                             <img src="{% static 'minesweeper/images/face-unpressed.png' %}">
                         </button>
-                        <div if="seconds_counter" class="counter">seconds</div>
+                        <div id="seconds_counter" class="counter">
+                            <div class="digits">
+                                <div class="digit digit-0"></div><div class="digit digit-0"></div><div class="digit digit-0"></div>
+                            </div>
+                        </div>
                     </div>
                 <div class="border_vert"></div>
             </div>
