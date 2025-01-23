@@ -1,0 +1,101 @@
+#board {
+    display: grid;
+    grid-template-columns: repeat(var(--board-width), var(--cell-width));
+    grid-template-rows: repeat(var(--board-height), var(--cell-width));
+    gap: 0;
+    border: 2px solid #7b7b7b;
+    width: fit-content;
+    user-select: none;
+}
+
+.panel {
+    display: flex;
+    background: #c0c0c0;
+    flex: 1;
+    height: calc(25px * 2);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.image-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.image-button img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.counter {
+
+}
+
+.border_corners {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.border_hor {
+    height: calc(11 / 16 * 25px);
+    width: auto;
+    flex: 1;
+    background-size: 100% 100%;
+    background-image: var(--border-hor-image);
+}
+
+.border_vert {
+    width: calc(11 / 16 * 25px);
+    max-width: calc(11 / 16 * 25px);
+    height: auto;
+    flex: 1;
+    background-size: 100% 100%;
+    background-image: var(--border-vert-image);
+}
+
+.corner_top_left {
+    width: calc(11 / 16 * 25px);
+    height: calc(11 / 16 * 25px);
+    background-size: 100% 100%;
+    background-image: var(--corner-top-left-image);
+}
+
+.corner_top_right {
+    width: calc(11 / 16 * 25px);
+    height: calc(11 / 16 * 25px);
+    background-size: 100% 100%;
+    background-image: var(--corner-top-right-image);
+}
+
+.t_left {
+    width: calc(11 / 16 * 25px);
+    height: calc(11 / 16 * 25px);
+    background-size: 100% 100%;
+    background-image: var(--t-left-image);
+}
+
+.t_right {
+    width: calc(11 / 16 * 25px);
+    height: calc(11 / 16 * 25px);
+    background-size: 100% 100%;
+    background-image: var(--t-right-image);
+}
+
+.corner_bottom_left {
+    width: calc(11 / 16 * 25px);
+    height: calc(11 / 16 * 25px);
+    background-size: 100% 100%;
+    background-image: var(--corner-bottom-left-image);
+}
+
+.corner_bottom_right {
+    width: calc(11 / 16 * 25px);
+    height: calc(11 / 16 * 25px);
+    background-size: 100% 100%;
+    background-image: var(--corner-bottom-right-image);
+}
