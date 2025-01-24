@@ -101,6 +101,7 @@ socket.onmessage = function (e) {
 
         if(data["won"]){
             mines_left_update_counter(0);
+            update_seconds_counter(Math.floor(data["time"]/1000))
         }
         let timeSpent = data["time"] / 1000;
         console.log(timeSpent);
