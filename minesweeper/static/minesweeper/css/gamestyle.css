@@ -87,18 +87,32 @@
     align-items: center;
 }
 
-.image-button {
-    background: none;
+.face-button {
     border: none;
     padding: 0;
     margin: 0;
     cursor: pointer;
+    background-size: 100% 100%;
+    display: block;
+    width: 39px;
+    height: 39px;
 }
 
-.image-button img {
-    display: block;
-    width: 100%;
-    height: auto;
+.face-neutral {
+
+    background-image: url("../images/face-unpressed.png");
+}
+
+.face-neutral:active{
+    background-image: url("../images/face-pressed.png");
+}
+
+.face-happy{
+    background-image: url("../images/face-happy.png");
+}
+
+.face-sad{
+    background-image: url("../images/face-sad.png");
 }
 
 .counter {

@@ -24,6 +24,10 @@ function setCookie(name, value, days) {
 }
 
 document.querySelector('#new-game-button').addEventListener('click', () => {
+    restart_game();
+});
+
+function restart_game(){
     const message = JSON.stringify({
         type: "new_game",
         message: ""
@@ -40,7 +44,8 @@ document.querySelector('#new-game-button').addEventListener('click', () => {
     }
     timerInterval = null;
     update_seconds_counter(0);
-});
+    document.querySelector('#new-game-button').classList.value = 'face-button face-neutral';
+}
 
 let fastMode = getCookie('fastMode') === 'true';
 
@@ -102,6 +107,10 @@ socket.onmessage = function (e) {
         if(data["won"]){
             mines_left_update_counter(0);
             update_seconds_counter(Math.floor(data["time"]/1000))
+            document.querySelector('#new-game-button').classList.value = 'face-button face-happy';
+        }
+        else {
+            document.querySelector('#new-game-button').classList.value = 'face-button face-sad';
         }
         let timeSpent = data["time"] / 1000;
         console.log(timeSpent);
