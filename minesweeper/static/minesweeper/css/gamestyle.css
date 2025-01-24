@@ -132,6 +132,10 @@
     border: 0;
 }
 
+.digit--{
+    background-image: var(--d--)
+}
+
 .digit-0 {
     background-image: var(--d-0);
 }

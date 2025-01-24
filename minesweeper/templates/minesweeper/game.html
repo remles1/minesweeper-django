@@ -28,6 +28,7 @@
                 --board-height: {{ difficulty_settings.height }};
                 --cell-width: {{ difficulty_settings.cell_width }};
                 --d-background: url("{% static 'minesweeper/images/d-background.svg' %}");
+                --d--: url("{% static 'minesweeper/images/d--.svg' %}");
                 --d-0: url("{% static 'minesweeper/images/d-0.svg' %}");
                 --d-1: url("{% static 'minesweeper/images/d-1.svg' %}");
                 --d-2: url("{% static 'minesweeper/images/d-2.svg' %}");
@@ -56,7 +57,6 @@
 {% block maincontent %}
 
 <div class="game-container ">
-    <div id="timer">0.000</div>
     <div id="game">
         <div class="top_part">
             <div class="border_corners">
@@ -67,15 +67,15 @@
                     <div class="panel">
                         <div id="mine_counter" class="counter">
                             <div class="digits">
-                                <div class="digit"></div><div class="digit"></div><div class="digit"></div>
+                                <div id="mlc_d0" class="digit"></div><div id="mlc_d1" class="digit"></div><div id="mlc_d2" class="digit"></div>
                             </div>
                         </div>
-                        <button class="image-button">
+                        <button id="new-game-button" class="image-button">
                             <img src="{% static 'minesweeper/images/face-unpressed.png' %}">
                         </button>
                         <div id="seconds_counter" class="counter">
                             <div class="digits">
-                                <div class="digit digit-0"></div><div class="digit digit-0"></div><div class="digit digit-0"></div>
+                                <div id="sc_d0" class="digit"></div><div id="sc_d1" class="digit"></div><div id="sc_d2" class="digitS"></div>
                             </div>
                         </div>
                     </div>
@@ -107,7 +107,11 @@
 {% endblock %}
 
 {% block scriptblock %}
-<script>const difficulty_name = "{{ difficulty_settings.name }}";</script>
+<script>
+    const difficulty_name = "{{ difficulty_settings.name }}";
+    const mine_count = "{{ difficulty_settings.mine_count }}";
+</script>
+
 <script src="{% static 'minesweeper/js/game.js' %}"></script>
 
 {% endblock %}

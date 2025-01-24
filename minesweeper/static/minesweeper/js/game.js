@@ -2,6 +2,11 @@ const socket = new WebSocket(`ws://localhost:8000/ws/game/${difficulty_name}`);
 let firstClick = true;
 let startTime = null;
 let timerRunning = false;
+let timerInterval = null;
+let minesLeft = mine_count;
+mines_left_update_counter(minesLeft);
+update_seconds_counter(0)
+
 
 // Function to get a cookie value by name
 function getCookie(name) {
@@ -18,9 +23,26 @@ function setCookie(name, value, days) {
     document.cookie = `${name}=${value}; ${expires}; path=/`;
 }
 
+document.querySelector('#new-game-button').addEventListener('click', () => {
+    const message = JSON.stringify({
+        type: "new_game",
+        message: ""
+    })
+    socket.send(message)
+    firstClick = true;
+    startTime = null;
+    timerRunning = false;
+    minesLeft = mine_count;
+    mines_left_update_counter(minesLeft);
+
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+    timerInterval = null;
+    update_seconds_counter(0);
+});
 
 let fastMode = getCookie('fastMode') === 'true';
-
 
 const fastModeButton = document.getElementById('toggleButton');
 
@@ -71,9 +93,17 @@ socket.onmessage = function (e) {
     let gameOver = data["over"];
     if (gameOver) {
         timerRunning = false;
+        const div = document.querySelector('#board');
+        Array.from(div.children).forEach(child => {
+            const clonedChild = child.cloneNode(true);
+            div.replaceChild(clonedChild, child);
+        });
+
+        if(data["won"]){
+            mines_left_update_counter(0);
+        }
         let timeSpent = data["time"] / 1000;
         console.log(timeSpent);
-        document.getElementById("timer").innerHTML = timeSpent.toString();
     }
 
 };
@@ -140,14 +170,21 @@ function cellMouseUp(event) {
     }
 
     if (fastMode && this.classList.contains(user_board_dict["c"]) || this.classList.contains(user_board_dict["f"])) {
+        if(this.classList.contains(user_board_dict["c"])){
+            minesLeft--;
+        }
+        if (this.classList.contains(user_board_dict["f"])){
+            minesLeft++;
+        }
+        mines_left_update_counter(minesLeft);
         const message = JSON.stringify({
-            btn: "r",
+            type: "r_click",
             message: this.id.replace(/^id/, "")
         })
         socket.send(message)
     } else {
         const message = JSON.stringify({
-            btn: "l",
+            type: "l_click",
             message: this.id.replace(/^id/, "")
         })
         socket.send(message)
@@ -165,18 +202,22 @@ function cellMouseUp(event) {
 function cellRightClicked(event) {
     event.preventDefault();
     if (!this.classList.contains(user_board_dict["0"])) {
-        this.classList.toggle(user_board_dict["c"]);
-        this.classList.toggle(user_board_dict["f"]);
-
         if (!fastMode) {
+            if(this.classList.contains(user_board_dict["c"])){
+                minesLeft--;
+            }
+            if (this.classList.contains(user_board_dict["f"])){
+                minesLeft++;
+            }
+            mines_left_update_counter(minesLeft);
             const message = JSON.stringify({
-                btn: "r",
+                type: "r_click",
                 message: this.id.replace(/^id/, "")
             })
             socket.send(message)
         } else {
             const message = JSON.stringify({
-                btn: "l",
+                type: "l_click",
                 message: this.id.replace(/^id/, "")
             })
             socket.send(message)
@@ -194,12 +235,36 @@ function cellRightClicked(event) {
 
 
 function timer() {
-    if (!timerRunning) {
-        return;
-    }
-    const now = performance.now();
-    const elapsed = (now - startTime) / 1000;
-    document.getElementById("timer").textContent = elapsed.toFixed(3);
-    requestAnimationFrame(timer); // Continuously update the timer
+    let seconds = 0;
+    timerInterval=setInterval(()=>{
+        if (!timerRunning) {
+            return;
+        }
+        seconds += 1;
+        update_seconds_counter(seconds)
+    },1000);
 }
 
+function update_seconds_counter(seconds){
+    let seconds_as_digits = convertNumberTo3Digits(seconds);
+        for(let i = 0; i < 3; i++){
+            let digit_div = document.getElementById(`sc_d${i}`)
+            digit_div.classList.value = `digit digit-${seconds_as_digits[i]}`;
+        }
+}
+
+function mines_left_update_counter(mine_count){
+    let mines_left_as_digits = convertNumberTo3Digits(mine_count);
+    for(let i = 0; i < 3; i++){
+            let digit_div = document.getElementById(`mlc_d${i}`)
+            digit_div.classList.value = `digit digit-${mines_left_as_digits[i]}`;
+    }
+}
+
+function convertNumberTo3Digits(number){
+    if (number > 999){
+        return ['9','9','9'];
+    }
+    let formatted = number.toString().padStart(3,'0');
+    return formatted.split('');
+}
