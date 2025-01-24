@@ -1,6 +1,9 @@
+import os
+
 from django.views.generic import TemplateView
 
 from minesweeper.config import difficulty_mapping
+from mysite import settings
 
 
 class IndexView(TemplateView):

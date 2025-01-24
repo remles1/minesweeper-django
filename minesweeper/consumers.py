@@ -61,7 +61,7 @@ class GameConsumer(WebsocketConsumer):
 
         self.send_user_board()
 
-        if self.game.game_over and self.game.game_won:
+        if self.game.game_over and self.game.game_won and not self.user.is_anonymous:
             model_game = Game(**vars(self.game))
             model_game.save()
             # self.close()
