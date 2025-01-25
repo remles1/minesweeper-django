@@ -89,32 +89,38 @@ socket.onopen = function (e) {
 
 socket.onmessage = function (e) {
     const data = JSON.parse(e.data);
-    let user_board = JSON.parse(data["message"])
-    user_board = user_board.map(row =>
-        row.map(cell => user_board_dict[cell])
-    )
-    //console.log(user_board)
-    render_user_board(user_board)
-    let gameOver = data["over"];
-    if (gameOver) {
-        timerRunning = false;
-        const div = document.querySelector('#board');
-        Array.from(div.children).forEach(child => {
-            const clonedChild = child.cloneNode(true);
-            div.replaceChild(clonedChild, child);
-        });
+    if(data["type"] === "user_board"){
+        let user_board = JSON.parse(data["message"])
+        user_board = user_board.map(row =>
+            row.map(cell => user_board_dict[cell])
+        )
+        //console.log(user_board)
+        render_user_board(user_board)
+        let gameOver = data["over"];
+        if (gameOver) {
+            timerRunning = false;
+            const div = document.querySelector('#board');
+            Array.from(div.children).forEach(child => {
+                const clonedChild = child.cloneNode(true);
+                div.replaceChild(clonedChild, child);
+            });
 
-        if(data["won"]){
-            mines_left_update_counter(0);
-            update_seconds_counter(Math.floor(data["time"]/1000))
-            document.querySelector('#new-game-button').classList.value = 'face-button face-happy';
+            if(data["won"]){
+                mines_left_update_counter(0);
+                update_seconds_counter(Math.floor(data["time"]/1000))
+                document.querySelector('#new-game-button').classList.value = 'face-button face-happy';
+            }
+            else {
+                document.querySelector('#new-game-button').classList.value = 'face-button face-sad';
+            }
+            let timeSpent = data["time"] / 1000;
+            console.log(timeSpent);
         }
-        else {
-            document.querySelector('#new-game-button').classList.value = 'face-button face-sad';
-        }
-        let timeSpent = data["time"] / 1000;
-        console.log(timeSpent);
     }
+    else if (data["type"] === "game_stats"){
+        console.log(data["message"]);
+    }
+
 
 };
 

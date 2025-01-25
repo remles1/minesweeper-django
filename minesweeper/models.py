@@ -27,3 +27,5 @@ class GameStats(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     tbv = models.IntegerField()
     tbv_per_second = models.FloatField()
+    ios = models.FloatField()
+    rqp = models.FloatField()

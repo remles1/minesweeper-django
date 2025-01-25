@@ -1,6 +1,5 @@
 import json
 import os
-import random
 
 from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth.models import User
@@ -14,7 +13,7 @@ from minesweeper.models import Game, GameStats
 class GameConsumer(WebsocketConsumer):
     user: User
     game: MinesweeperGame
-
+    game_stats: MinesweeperStats
 
     def connect(self):
         # session = self.scope["session"]
@@ -46,13 +45,10 @@ class GameConsumer(WebsocketConsumer):
             self.send_user_board()
             return
 
-
         message = text_data_json["message"]
         split_message = message.split('-')
         y = int(split_message[0])
         x = int(split_message[1])
-
-
 
         if text_data_json["type"] == "l_click":
             self.game.cell_left_clicked(y, x)
@@ -62,30 +58,51 @@ class GameConsumer(WebsocketConsumer):
 
         self.send_user_board()
 
-        if self.game.game_over and self.game.game_won and not self.user.is_anonymous:
-            model_game = Game(**vars(self.game))
+        if self.game.game_over and self.game.game_won:
+            self.calculate_stats()
+            self.send_stats()
+            if not self.user.is_anonymous:
+                self.save_game_and_stats_to_db()
 
-            stats = MinesweeperStats(self.game)
-            stats_dict = vars(stats).copy()
+    def calculate_stats(self):
+        self.game_stats = MinesweeperStats(self.game)
 
-            stats_dict.pop('_traversed_board', None)
+    def save_game_and_stats_to_db(self):
+        model_game = Game(**vars(self.game))
 
-            stats_dict['game'] = model_game
+        stats_dict = vars(self.game_stats).copy()
 
-            model_game_stats = GameStats(**stats_dict)
+        stats_dict.pop('_traversed_board', None)
 
-            model_game.save()
-            model_game_stats.save()
+        stats_dict['game'] = model_game
+
+        model_game_stats = GameStats(**stats_dict)
+
+        model_game.save()
+        model_game_stats.save()
 
     def send_user_board(self):
         user_board_json = json.dumps(self.game.user_board)
         self.send(text_data=json.dumps({
+            "type": "user_board",
             "won": self.game.game_won,
             "over": self.game.game_over,
             "time": self.game.time_spent,
             "message": user_board_json
         })
         )
+
+    def send_stats(self):
+        stats_dict = vars(self.game_stats).copy()
+
+        stats_dict.pop('game', None)
+        stats_dict.pop('_traversed_board', None)
+
+        stats_dict["time_spent"] = self.game.time_spent
+        self.send(text_data=json.dumps({
+            "type": "game_stats",
+            "message": f"{stats_dict}"
+        }))
 
     def start_a_new_game(self):
         difficulty = self.scope['url_route']['kwargs']['difficulty']

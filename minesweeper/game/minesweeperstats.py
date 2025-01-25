@@ -1,3 +1,4 @@
+import math
 from typing import List
 
 from minesweeper.game.minesweepergame import MinesweeperGame
@@ -8,12 +9,17 @@ class MinesweeperStats:
     _traversed_board: List[List[bool]]  # needs to be reinitialised as all 'False' in order to count 3bv properly
     tbv: int
     tbv_per_second: float
+    ios: float
+    rqp: float
 
     def __init__(self, game: MinesweeperGame):
         self.game = game
         self._traversed_board = [[False] * game.width for _ in range(game.height)]
         self.tbv = self.calculate_3bv()
-        self.tbv_per_second = self.tbv/game.time_spent*1000
+        seconds = game.time_spent/1000
+        self.tbv_per_second = self.tbv/seconds
+        self.ios = math.log(self.tbv) / math.log(seconds)
+        self.rqp = seconds / self.tbv_per_second
 
     def open_cells_recursively(self, y, x):
         """Used for counting blank blobs in the minesweeper board
