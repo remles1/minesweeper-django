@@ -21,3 +21,9 @@ class Game(models.Model):
 
     def __str__(self):
         return f"pk={self.pk}, logic_board={self.logic_board}"
+
+
+class GameStats(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    tbv = models.IntegerField()
+    tbv_per_second = models.FloatField()

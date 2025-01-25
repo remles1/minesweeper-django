@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 
 from minesweeper.config import difficulty_mapping
 from minesweeper.game.minesweepergame import MinesweeperGame
-from minesweeper.models import Game
+from minesweeper.game.minesweeperstats import MinesweeperStats
+from minesweeper.models import Game, GameStats
 
 
 class GameConsumer(WebsocketConsumer):
@@ -63,8 +64,18 @@ class GameConsumer(WebsocketConsumer):
 
         if self.game.game_over and self.game.game_won and not self.user.is_anonymous:
             model_game = Game(**vars(self.game))
+
+            stats = MinesweeperStats(self.game)
+            stats_dict = vars(stats).copy()
+
+            stats_dict.pop('_traversed_board', None)
+
+            stats_dict['game'] = model_game
+
+            model_game_stats = GameStats(**stats_dict)
+
             model_game.save()
-            # self.close()
+            model_game_stats.save()
 
     def send_user_board(self):
         user_board_json = json.dumps(self.game.user_board)

@@ -7,7 +7,6 @@ from typing import List
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-from minesweeper.models import Game
 
 
 class MinesweeperGame:
