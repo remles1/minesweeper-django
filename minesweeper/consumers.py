@@ -98,7 +98,7 @@ class GameConsumer(WebsocketConsumer):
         stats_dict.pop('game', None)
         stats_dict.pop('_traversed_board', None)
 
-        stats_dict["time_spent"] = self.game.time_spent
+        stats_dict["time_spent"] = self.game.time_spent/1000  # time is send in seconds to the frontend
         self.send(text_data=json.dumps({
             "type": "game_stats",
             "message": f"{stats_dict}"

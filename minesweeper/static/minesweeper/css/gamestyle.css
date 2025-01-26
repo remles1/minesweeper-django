@@ -8,6 +8,17 @@
     user-select: none;
 }
 
+#game-and-stats{
+    display: flex;
+    flex: 1;
+    gap: 20px
+}
+
+.stats{
+    background: #23262c;
+    min-width: 200px;
+}
+
 
 .cell {
     background-size: cover;

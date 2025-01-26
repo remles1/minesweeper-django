@@ -25,6 +25,9 @@ function setCookie(name, value, days) {
 
 document.querySelector('#new-game-button').addEventListener('click', () => {
     restart_game();
+    const stats_div = document.getElementById("stats");
+    stats_div.style.display = "none";
+
 });
 
 function restart_game(){
@@ -118,7 +121,34 @@ socket.onmessage = function (e) {
         }
     }
     else if (data["type"] === "game_stats"){
-        console.log(data["message"]);
+        let message = data["message"];
+        console.log(message);
+        message = message.replaceAll('\'','\"');
+        let stats_dict = JSON.parse(message);
+        let stats_order = ["time_spent","tbv","tbv_per_second","ios","rqp"];
+        let stats_names = {
+            "time_spent": "Time",
+            "tbv": "3bv",
+            "tbv_per_second": "3bv/s",
+            "ios": "IOS",
+            "rqp": "RQP"
+        };
+
+        const stats_div = document.getElementById("stats");
+        stats_div.innerHTML = '';
+
+        stats_order.forEach(key => {
+            const stat = document.createElement("p");
+            stat.innerHTML = `${stats_names[key]}: ${parseFloat(stats_dict[key]).toFixed(3)}`;
+
+            stats_div.appendChild(stat)
+
+
+        } )
+
+
+        stats_div.style.display = "block";
+
     }
 
 
