@@ -1,6 +1,6 @@
 stats_pb_conditions = {
-    "tbv": "gt",
-    "tbv_per_second": "gt",
-    "ios": "gt",
-    "rqp": "lt"
+    "tbv": lambda x, y: x > y,
+    "tbv_per_second": lambda x, y: x > y,
+    "ios": lambda x, y: x > y,
+    "rqp": lambda x, y: x < y,
 }
