@@ -115,12 +115,6 @@ class GameConsumer(WebsocketConsumer):
         games = Game.objects.filter(player=self.user, difficulty=self.game.difficulty)
         games_stats = GameStats.objects.filter(game__in=games)
 
-        print("Games:", len(games))
-        print("Games Stats:", len(games_stats))
-        print("Current Game Time Spent:", self.game.time_spent)
-        print("Stats Dict:", stats_dict)
-        print("Stats PB Conditions:", stats_pb_conditions)
-
         if games.filter(time_spent__lt=self.game.time_spent).count() == 0:
             pbs.append("time_spent")
 
