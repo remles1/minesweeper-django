@@ -8,6 +8,7 @@ from minesweeper.config import difficulty_mapping
 from minesweeper.game.minesweepergame import MinesweeperGame
 from minesweeper.game.minesweeperstats import MinesweeperStats
 from minesweeper.models import Game, GameStats
+from minesweeper.utils import stats_pb_conditions
 
 
 class GameConsumer(WebsocketConsumer):
@@ -60,8 +61,10 @@ class GameConsumer(WebsocketConsumer):
 
         if self.game.game_over and self.game.game_won:
             self.calculate_stats()
-            self.send_stats()
-            if not self.user.is_anonymous:
+            stats_dict = self.make_stats_dict()
+            pbs = self.check_for_pb(stats_dict)
+            self.send_stats(stats_dict=stats_dict, pbs=pbs)
+            if not self.user.is_anonymous and len(pbs) > 0:
                 self.save_game_and_stats_to_db()
 
     def calculate_stats(self):
@@ -92,17 +95,42 @@ class GameConsumer(WebsocketConsumer):
         })
         )
 
-    def send_stats(self):
+    def make_stats_dict(self):
         stats_dict = vars(self.game_stats).copy()
 
         stats_dict.pop('game', None)
         stats_dict.pop('_traversed_board', None)
+        return stats_dict
 
+    def send_stats(self, stats_dict, pbs):
         stats_dict["time_spent"] = self.game.time_spent/1000  # time is send in seconds to the frontend
         self.send(text_data=json.dumps({
             "type": "game_stats",
-            "message": f"{stats_dict}"
+            "message": f"{stats_dict}",
+            "pbs": f"{pbs}"
         }))
+
+    def check_for_pb(self, stats_dict):
+        pbs = []
+        games = Game.objects.filter(player=self.user, difficulty=self.game.difficulty)
+        games_stats = GameStats.objects.filter(game__in=games)
+
+        print("Games:", len(games))
+        print("Games Stats:", len(games_stats))
+        print("Current Game Time Spent:", self.game.time_spent)
+        print("Stats Dict:", stats_dict)
+        print("Stats PB Conditions:", stats_pb_conditions)
+
+        if games.filter(time_spent__lt=self.game.time_spent).count() == 0:
+            pbs.append("time_spent")
+
+        for key, value in stats_dict.items():
+            kwargs = {f"{key}__{stats_pb_conditions[key]}": f"{value}"}
+            if games_stats.filter(**kwargs).count() == 0:
+                pbs.append(key)
+        return pbs
+
+
 
     def start_a_new_game(self):
         difficulty = self.scope['url_route']['kwargs']['difficulty']

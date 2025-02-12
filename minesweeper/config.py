@@ -21,3 +21,4 @@ difficulty_mapping = {
         "mine_count": 99
     }
 }
+

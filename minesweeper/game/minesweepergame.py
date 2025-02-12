@@ -8,7 +8,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 
-
 class MinesweeperGame:
     player: User
     difficulty: str

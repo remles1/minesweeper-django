@@ -122,14 +122,17 @@ socket.onmessage = function (e) {
     }
     else if (data["type"] === "game_stats"){
         let message = data["message"];
-        console.log(message);
+        let pbs = data["pbs"];
         message = message.replaceAll('\'','\"');
+        pbs = pbs.replaceAll('\'','\"');
+        console.log(message);
+        console.log(pbs);
         let stats_dict = JSON.parse(message);
         let stats_order = ["time_spent","tbv","tbv_per_second","ios","rqp"];
         let stats_names = {
-            "time_spent": "Time",
-            "tbv": "3bv",
-            "tbv_per_second": "3bv/s",
+            "time_spent": "Seconds",
+            "tbv": "3BV",
+            "tbv_per_second": "3BV/s",
             "ios": "IOS",
             "rqp": "RQP"
         };
@@ -140,6 +143,7 @@ socket.onmessage = function (e) {
         stats_order.forEach(key => {
             const stat = document.createElement("p");
             stat.innerHTML = `${stats_names[key]}: ${parseFloat(stats_dict[key]).toFixed(3)}`;
+
 
             stats_div.appendChild(stat)
 
