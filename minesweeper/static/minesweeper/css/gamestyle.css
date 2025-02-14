@@ -15,10 +15,26 @@
 }
 
 .stats{
+    flex-direction: column;
     background: #23262c;
     min-width: 200px;
 }
 
+.stat{
+    display: flex;
+    gap: 10px;
+    justify-content: left;
+    align-items: center;
+    flex: 1;
+}
+
+.pb{
+    display: flex;
+    width: 20px;
+    height: 20px;
+    background-size: cover;
+    background-image: url("../images/pb.svg");
+}
 
 .cell {
     background-size: cover;

@@ -141,9 +141,14 @@ socket.onmessage = function (e) {
         stats_div.innerHTML = '';
 
         stats_order.forEach(key => {
-            const stat = document.createElement("p");
+            const stat = document.createElement("div");
+            stat.classList.value = 'stat';
             stat.innerHTML = `${stats_names[key]}: ${parseFloat(stats_dict[key]).toFixed(3)}`;
-
+            if(pbs.includes(key)){
+                const pb = document.createElement("div");
+                pb.classList.value = 'pb';
+                stat.appendChild(pb);
+            }
 
             stats_div.appendChild(stat)
 
@@ -151,7 +156,7 @@ socket.onmessage = function (e) {
         } )
 
 
-        stats_div.style.display = "block";
+        stats_div.style.display = "flex";
 
     }
 
