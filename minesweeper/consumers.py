@@ -62,7 +62,9 @@ class GameConsumer(WebsocketConsumer):
         if self.game.game_over and self.game.game_won:
             self.calculate_stats()
             stats_dict = self.make_stats_dict()
-            pbs = self.check_for_pb(stats_dict)
+            pbs = []
+            if not self.user.is_anonymous:
+                pbs = self.check_for_pb(stats_dict)
             self.send_stats(stats_dict=stats_dict, pbs=pbs)
             if not self.user.is_anonymous and len(pbs) > 0:
                 self.save_game_and_stats_to_db()
