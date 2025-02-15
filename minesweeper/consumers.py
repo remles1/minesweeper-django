@@ -125,8 +125,6 @@ class GameConsumer(WebsocketConsumer):
                 pbs.append(key)
         return pbs
 
-
-
     def start_a_new_game(self):
         difficulty = self.scope['url_route']['kwargs']['difficulty']
 

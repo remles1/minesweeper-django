@@ -128,6 +128,7 @@ socket.onmessage = function (e) {
         console.log(message);
         console.log(pbs);
         let stats_dict = JSON.parse(message);
+        pbs = JSON.parse(pbs);
         let stats_order = ["time_spent","tbv","tbv_per_second","ios","rqp"];
         let stats_names = {
             "time_spent": "Seconds",
