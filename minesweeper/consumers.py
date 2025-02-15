@@ -66,7 +66,7 @@ class GameConsumer(WebsocketConsumer):
             if not self.user.is_anonymous:
                 pbs = self.check_for_pb(stats_dict)
             self.send_stats(stats_dict=stats_dict, pbs=pbs)
-            if not self.user.is_anonymous and len(pbs) > 0:
+            if not self.user.is_anonymous:
                 self.save_game_and_stats_to_db()
 
     def calculate_stats(self):
@@ -115,16 +115,14 @@ class GameConsumer(WebsocketConsumer):
     def check_for_pb(self, stats_dict):
         pbs = []
         games = Game.objects.filter(player=self.user, difficulty=self.game.difficulty)
-        games_stats = GameStats.objects.filter(game__in=games).select_related('game')
+        games_stats = GameStats.objects.filter(game__in=games)
 
-        if not any(game.time_spent < self.game.time_spent for game in games):
+        if games.filter(time_spent__lte=self.game.time_spent).count() == 0:
             pbs.append("time_spent")
-
         for key, value in stats_dict.items():
-            condition = stats_pb_conditions[key]
-            if not any(getattr(stat, key) for stat in games_stats if condition(getattr(stat, key), value)):
+            kwargs = {f"{key}__{stats_pb_conditions[key]}": f"{value}"}
+            if games_stats.filter(**kwargs).count() == 0:
                 pbs.append(key)
-
         return pbs
 
 
