@@ -8,37 +8,53 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
         body {
             font-family: sans-serif;
             background-color: #343a40; /* Dark background */
             color: #f8f9fa; /* Light text color */
+            display: flex;
+            flex-direction: column;
         }
+
         .navbar {
             background-color: #212529; /* Darker navbar background */
             border-bottom: 1px solid #495057; /* Subtle border */
         }
+
         .navbar-brand {
             font-weight: bold;
             font-size: 1.5rem;
             color: #fff;
         }
+
         .nav-link {
             color: #adb5bd; /* Lighter text for links */
         }
+
         .nav-link:hover {
             color: #00bcd4; /* Accent color on hover */
         }
+
         .btn-login {
             background-color: #00bcd4; /* Accent color for login button */
             color: #212529; /* Dark text on button */
             border: none;
         }
+
         .btn-login:hover {
             background-color: #008ba3; /* Darker shade on hover */
         }
+
         .container {
             margin-top: 30px;
+            flex: 1;
         }
+
         .game-container {
             display: grid;
             background-color: #2c3338; /* Dark game container */
@@ -49,21 +65,22 @@
             grid-template-columns: auto;
             justify-items: center; /* Center items horizontally within their grid area */
         }
-        .stats{
+
+        .stats {
             background-color: #23262c;
             padding: 20px;
             border-radius: 10px;
-
         }
 
         h1, h2, h3, h4, h5, h6 {
             color: #fff;
         }
+
         p {
             color: #adb5bd;
         }
+
         footer {
-            margin-top: 50px;
             padding: 20px 0;
             background-color: #343a40;
             text-align: center;
@@ -79,14 +96,14 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Minesweeper Mania</a>
+            <a class="navbar-brand" href="/">Minesweeper</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Play</a>
+                        <a class="nav-link active" aria-current="page" href="/game">Play</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/highscores">High Scores</a>

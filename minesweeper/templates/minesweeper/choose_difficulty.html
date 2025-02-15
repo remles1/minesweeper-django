@@ -1,0 +1,70 @@
+{% extends "minesweeper/base.html" %}
+{% load i18n %}
+
+{% block headblock %}
+<style>
+        .difficulty-card {
+            background: #212529;
+            color: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .difficulty-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
+{% endblock %}
+
+{% block maincontent %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <p class="lead mb-4">Select the difficulty level to start your game. Each level changes the grid size and the number of mines.</p>
+
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card difficulty-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Beginner</h5>
+                            <p class="card-text">8x8 grid with 10 mines. Perfect for new players!</p>
+                            <a href="/game/beginner" class="btn btn-primary">Play Beginner</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card difficulty-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Intermediate</h5>
+                            <p class="card-text">16x16 grid with 40 mines. A bit more challenging!</p>
+                            <a href="/game/intermediate" class="btn btn-warning">Play Intermediate</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card difficulty-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Expert</h5>
+                            <p class="card-text">24x24 grid with 99 mines. Only for the brave!</p>
+                            <a href="/game/expert" class="btn btn-danger">Play Expert</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+

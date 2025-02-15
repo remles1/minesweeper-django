@@ -24,3 +24,8 @@ class GameView(TemplateView):
         context['difficulty_settings'] = difficulty_mapping[difficulty]
 
         return context
+
+
+class ChooseDifficultyView(TemplateView):
+    template_name = "minesweeper/choose_difficulty.html"
+
