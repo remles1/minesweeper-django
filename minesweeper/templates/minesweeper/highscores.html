@@ -2,5 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-test
+    {% for hs in highscores.beginner %}
+        <p>{{ hs.game.time_spent }}</p>
+    {% endfor %}
 {% endblock %}
