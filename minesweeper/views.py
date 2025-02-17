@@ -9,6 +9,8 @@ from mysite import settings
 class IndexView(TemplateView):
     template_name = "minesweeper/index.html"
 
+class HighscoresView(TemplateView):
+    template_name = "minesweeper/highscores.html"
 
 class GameView(TemplateView):
     template_name = "minesweeper/game.html"

@@ -4,10 +4,10 @@ import os
 from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth.models import User
 
-from minesweeper.config import difficulty_mapping
+from minesweeper.config import difficulty_mapping, MAX_HIGHSCORE_COUNT_PER_DIFFICULTY
 from minesweeper.game.minesweepergame import MinesweeperGame
 from minesweeper.game.minesweeperstats import MinesweeperStats
-from minesweeper.models import Game, GameStats
+from minesweeper.models import Game, GameStats, Highscore
 from minesweeper.utils import stats_pb_conditions
 
 
@@ -67,13 +67,14 @@ class GameConsumer(WebsocketConsumer):
                 pbs = self.check_for_pb(stats_dict)
             self.send_stats(stats_dict=stats_dict, pbs=pbs)
             if not self.user.is_anonymous:
-                self.save_game_and_stats_to_db()
+                model_game = Game(**vars(self.game))
+                self.save_game_and_stats_to_db(model_game)
+                self.save_to_highscores_if_a_highscore(model_game)
 
     def calculate_stats(self):
         self.game_stats = MinesweeperStats(self.game)
 
-    def save_game_and_stats_to_db(self):
-        model_game = Game(**vars(self.game))
+    def save_game_and_stats_to_db(self, model_game):
 
         stats_dict = vars(self.game_stats).copy()
 
@@ -85,6 +86,17 @@ class GameConsumer(WebsocketConsumer):
 
         model_game.save()
         model_game_stats.save()
+
+    def save_to_highscores_if_a_highscore(self, model_game):
+        highscores = Highscore.objects.filter(game__difficulty=self.game.difficulty)
+        if highscores.count() < MAX_HIGHSCORE_COUNT_PER_DIFFICULTY or highscores.filter(game__time_spent__lte=self.game.time_spent).count() == 0:
+            model_highscore = Highscore(game=model_game)
+            model_highscore.save()
+        if Highscore.objects.filter(game__difficulty=self.game.difficulty).count() > MAX_HIGHSCORE_COUNT_PER_DIFFICULTY:
+            worst_score = Highscore.objects.filter(game__difficulty=self.game.difficulty).order_by('-game__time_spent').first()
+            worst_score.delete()
+
+
 
     def send_user_board(self):
         user_board_json = json.dumps(self.game.user_board)

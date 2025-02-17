@@ -29,3 +29,7 @@ class GameStats(models.Model):
     tbv_per_second = models.FloatField()
     ios = models.FloatField()
     rqp = models.FloatField()
+
+
+class Highscore(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
