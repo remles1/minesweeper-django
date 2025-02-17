@@ -5,7 +5,8 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.views.generic import TemplateView
 
-from minesweeper.config import difficulty_mapping, DIFFICULTY_BEGINNER, DIFFICULTY_INTERMEDIATE, DIFFICULTY_EXPERT
+from minesweeper.config import difficulty_mapping, DIFFICULTY_BEGINNER, DIFFICULTY_INTERMEDIATE, DIFFICULTY_EXPERT, \
+    HIGHSCORES_PER_PAGE
 from minesweeper.models import Highscore
 from mysite import settings
 
@@ -22,15 +23,14 @@ class HighscoresView(TemplateView):
 
         highscores = {}
 
-        highscores_per_page = 1
 
         beginner = Highscore.objects.filter(game__difficulty=DIFFICULTY_BEGINNER).order_by('game__time_spent')
         intermediate = Highscore.objects.filter(game__difficulty=DIFFICULTY_INTERMEDIATE).order_by('game__time_spent')
         expert = Highscore.objects.filter(game__difficulty=DIFFICULTY_EXPERT).order_by('game__time_spent')
 
-        paginator_beginner = Paginator(beginner, highscores_per_page)
-        paginator_intermediate = Paginator(intermediate, highscores_per_page)
-        paginator_expert = Paginator(expert, highscores_per_page)
+        paginator_beginner = Paginator(beginner, HIGHSCORES_PER_PAGE)
+        paginator_intermediate = Paginator(intermediate, HIGHSCORES_PER_PAGE)
+        paginator_expert = Paginator(expert, HIGHSCORES_PER_PAGE)
 
         page_beginner = self.request.GET.get(DIFFICULTY_BEGINNER)
         page_intermediate = self.request.GET.get(DIFFICULTY_INTERMEDIATE)
