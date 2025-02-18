@@ -62,6 +62,12 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_NAME = 'sessioncookie'
 SESSION_COOKIE_DOMAIN = '.localhost'  # Include subdomain support
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    }
+}
 
 
 ROOT_URLCONF = 'mysite.urls'

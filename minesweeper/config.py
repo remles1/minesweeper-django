@@ -28,3 +28,4 @@ difficulty_mapping = {
 
 MAX_HIGHSCORE_COUNT_PER_DIFFICULTY = 300  # 900 total, because there are 3 difficulties
 HIGHSCORES_PER_PAGE = 10
+HIGHSCORE_CACHE_TIMEOUT = 300  # in seconds
