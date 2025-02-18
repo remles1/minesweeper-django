@@ -48,8 +48,6 @@ class HighscoresView(TemplateView):
 
         return context
 
-    def get_cached_highscores(self):
-        pass
 
 class GameView(TemplateView):
     template_name = "minesweeper/game.html"
