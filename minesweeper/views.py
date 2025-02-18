@@ -21,8 +21,9 @@ class HighscoresView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        highscores = cache.get('cached_highscores')
-        if highscores is None:
+        cached_highscores = cache.get('cached_highscores')
+
+        if cached_highscores is None:
             beginner = Highscore.objects.filter(game__difficulty=DIFFICULTY_BEGINNER).select_related('game').order_by(
                 'game__time_spent')
             intermediate = Highscore.objects.filter(game__difficulty=DIFFICULTY_INTERMEDIATE).select_related(
@@ -30,24 +31,33 @@ class HighscoresView(TemplateView):
             expert = Highscore.objects.filter(game__difficulty=DIFFICULTY_EXPERT).select_related('game').order_by(
                 'game__time_spent')
 
-            paginator_beginner = Paginator(beginner, HIGHSCORES_PER_PAGE)
-            paginator_intermediate = Paginator(intermediate, HIGHSCORES_PER_PAGE)
-            paginator_expert = Paginator(expert, HIGHSCORES_PER_PAGE)
+            cached_highscores = {
+                DIFFICULTY_BEGINNER: beginner,
+                DIFFICULTY_INTERMEDIATE: intermediate,
+                DIFFICULTY_EXPERT: expert,
+            }
+            cache.set('cached_highscores', cached_highscores, timeout=HIGHSCORE_CACHE_TIMEOUT)
 
-            page_beginner = self.request.GET.get(DIFFICULTY_BEGINNER)
-            page_intermediate = self.request.GET.get(DIFFICULTY_INTERMEDIATE)
-            page_expert = self.request.GET.get(DIFFICULTY_EXPERT)
+        page_beginner = self.request.GET.get(DIFFICULTY_BEGINNER, 1)
+        page_intermediate = self.request.GET.get(DIFFICULTY_INTERMEDIATE, 1)
+        page_expert = self.request.GET.get(DIFFICULTY_EXPERT, 1)
 
-            highscores = {DIFFICULTY_BEGINNER: paginator_beginner.get_page(page_beginner),
-                          DIFFICULTY_INTERMEDIATE: paginator_intermediate.get_page(page_intermediate),
-                          DIFFICULTY_EXPERT: paginator_expert.get_page(page_expert)}
+        paginator_beginner = Paginator(cached_highscores[DIFFICULTY_BEGINNER], HIGHSCORES_PER_PAGE)
+        paginator_intermediate = Paginator(cached_highscores[DIFFICULTY_INTERMEDIATE], HIGHSCORES_PER_PAGE)
+        paginator_expert = Paginator(cached_highscores[DIFFICULTY_EXPERT], HIGHSCORES_PER_PAGE)
 
-            cache.set('cached_highscores', highscores, timeout=HIGHSCORE_CACHE_TIMEOUT)
+        highscores = {
+            DIFFICULTY_BEGINNER: paginator_beginner.get_page(page_beginner),
+            DIFFICULTY_INTERMEDIATE: paginator_intermediate.get_page(page_intermediate),
+            DIFFICULTY_EXPERT: paginator_expert.get_page(page_expert),
+        }
 
         context['highscores'] = highscores
+        context['DIFFICULTY_BEGINNER'] = DIFFICULTY_BEGINNER
+        context['DIFFICULTY_INTERMEDIATE'] = DIFFICULTY_INTERMEDIATE
+        context['DIFFICULTY_EXPERT'] = DIFFICULTY_EXPERT
 
         return context
-
 
 class GameView(TemplateView):
     template_name = "minesweeper/game.html"
