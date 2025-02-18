@@ -5,6 +5,7 @@ from minesweeper.models import Game, Highscore
 from minesweeper.game.minesweepergame import MinesweeperGame
 from minesweeper.config import DIFFICULTY_BEGINNER, DIFFICULTY_INTERMEDIATE, DIFFICULTY_EXPERT
 
+
 class MinesweeperGameTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpass')
