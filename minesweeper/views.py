@@ -59,6 +59,7 @@ class HighscoresView(TemplateView):
 
         return context
 
+
 class GameView(TemplateView):
     template_name = "minesweeper/game.html"
 
