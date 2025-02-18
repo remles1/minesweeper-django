@@ -42,7 +42,7 @@ jobs:
         pip install -r requirements.txt
     - name: Make migrations
       run: |
-        python manage.py makemigrations
+        python manage.py makemigrations minesweeper accounts --database=default
     - name: Apply migrations
       run: |
         python manage.py migrate
