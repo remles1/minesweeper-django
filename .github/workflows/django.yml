@@ -10,6 +10,21 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    services:
+      minesweeperdb:
+        image: postgres:17.0-alpine3.20
+        env:
+          POSTGRES_DB: app
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: pass
+        ports:
+          - "5432:5432"
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     strategy:
       max-parallel: 4
       matrix:
