@@ -59,8 +59,13 @@ MIDDLEWARE = [
 # Session conf
 #SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_NAME = 'sessioncookie'
 SESSION_COOKIE_DOMAIN = '.localhost'  # Include subdomain support
+
+# CSRF conf
+CSRF_COOKIE_HTTPONLY = True
+
 
 CACHES = {
     "default": {
