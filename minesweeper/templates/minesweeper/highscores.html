@@ -17,14 +17,18 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Player</th>
                                     <th scope="col">Time (seconds)</th>
+                                    <th scope="col">3BV</th>
+                                    <th scope="col">3BV/s</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for hs in highscores.beginner %}
+                                {% for data in highscores.beginner %}
                                     <tr>
                                         <th scope="row">{{ highscores.beginner.start_index|add:forloop.counter0 }}</th>
-                                        <td>{{ hs.game.player.username }}</td>
-                                        <td class="time-spent">{{ hs.game.time_spent }}</td>
+                                        <td>{{ data.highscore.game.player.username }}</td>
+                                        <td class="time-spent">{{ data.highscore.game.time_spent }}</td>
+                                        <td>{{ data.stats.tbv }}</td>
+                                        <td class="format-3-decimals">{{ data.stats.tbv_per_second }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -64,14 +68,18 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Player</th>
                                     <th scope="col">Time (seconds)</th>
+                                    <th scope="col">3BV</th>
+                                    <th scope="col">3BV/s</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for hs in highscores.intermediate %}
+                                {% for data in highscores.intermediate %}
                                     <tr>
                                         <th scope="row">{{ highscores.intermediate.start_index|add:forloop.counter0 }}</th>
-                                        <td>{{ hs.game.player.username }}</td>
-                                        <td class="time-spent">{{ hs.game.time_spent }}</td>
+                                        <td>{{ data.highscore.game.player.username }}</td>
+                                        <td class="time-spent">{{ data.highscore.game.time_spent }}</td>
+                                        <td>{{ data.stats.tbv }}</td>
+                                        <td class="format-3-decimals">{{ data.stats.tbv_per_second }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -112,14 +120,18 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Player</th>
                                     <th scope="col">Time (seconds)</th>
+                                    <th scope="col">3BV</th>
+                                    <th scope="col">3BV/s</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for hs in highscores.expert %}
+                                {% for data in highscores.expert %}
                                     <tr>
                                         <th scope="row">{{ highscores.expert.start_index|add:forloop.counter0 }}</th>
-                                        <td>{{ hs.game.player.username }}</td>
-                                        <td class="time-spent">{{ hs.game.time_spent }}</td>
+                                        <td>{{ data.highscore.game.player.username }}</td>
+                                        <td class="time-spent">{{ data.highscore.game.time_spent }}</td>
+                                        <td>{{ data.stats.tbv }}</td>
+                                        <td class="format-3-decimals">{{ data.stats.tbv_per_second }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -157,6 +169,16 @@
                 const originalTime = parseFloat(cell.textContent);
                 if (!isNaN(originalTime)) {
                     cell.textContent = (originalTime / 1000).toFixed(3);
+                }
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const f3DCells = document.querySelectorAll('.format-3-decimals');
+
+            f3DCells.forEach(cell => {
+                const textFloat = parseFloat(cell.textContent);
+                if (!isNaN(textFloat)) {
+                    cell.textContent = textFloat.toFixed(3);
                 }
             });
         });

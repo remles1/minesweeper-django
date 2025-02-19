@@ -1,5 +1,3 @@
-import os
-
 from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.http import Http404
@@ -7,8 +5,7 @@ from django.views.generic import TemplateView
 
 from minesweeper.config import difficulty_mapping, DIFFICULTY_BEGINNER, DIFFICULTY_INTERMEDIATE, DIFFICULTY_EXPERT, \
     HIGHSCORES_PER_PAGE, HIGHSCORE_CACHE_TIMEOUT
-from minesweeper.models import Highscore
-from mysite import settings
+from minesweeper.models import Highscore, GameStats
 
 
 class IndexView(TemplateView):
@@ -24,17 +21,48 @@ class HighscoresView(TemplateView):
         cached_highscores = cache.get('cached_highscores')
 
         if cached_highscores is None:
-            beginner = Highscore.objects.filter(game__difficulty=DIFFICULTY_BEGINNER).select_related('game').order_by(
+            beginner = Highscore.objects.filter(game__difficulty=DIFFICULTY_BEGINNER).select_related(
+                'game__player').order_by(
                 'game__time_spent')
+            beginner_stats = GameStats.objects.filter(game__in=beginner.values_list("game", flat=True))
+
+            beginner_data = []
+            for hs in beginner:
+                stats = beginner_stats.filter(game=hs.game).first()
+                beginner_data.append({
+                    'highscore': hs,
+                    'stats': stats
+                })
+
             intermediate = Highscore.objects.filter(game__difficulty=DIFFICULTY_INTERMEDIATE).select_related(
-                'game').order_by('game__time_spent')
-            expert = Highscore.objects.filter(game__difficulty=DIFFICULTY_EXPERT).select_related('game').order_by(
+                'game__player').order_by('game__time_spent')
+            intermediate_stats = GameStats.objects.filter(game__in=intermediate.values_list("game", flat=True))
+
+            intermediate_data = []
+            for hs in intermediate:
+                stats = intermediate_stats.filter(game=hs.game).first()
+                intermediate_data.append({
+                    'highscore': hs,
+                    'stats': stats
+                })
+
+            expert = Highscore.objects.filter(game__difficulty=DIFFICULTY_EXPERT).select_related(
+                'game__player').order_by(
                 'game__time_spent')
+            expert_stats = GameStats.objects.filter(game__in=expert.values_list("game", flat=True))
+
+            expert_data = []
+            for hs in expert:
+                stats = expert_stats.filter(game=hs.game).first()
+                expert_data.append({
+                    'highscore': hs,
+                    'stats': stats
+                })
 
             cached_highscores = {
-                DIFFICULTY_BEGINNER: beginner,
-                DIFFICULTY_INTERMEDIATE: intermediate,
-                DIFFICULTY_EXPERT: expert,
+                DIFFICULTY_BEGINNER: beginner_data,
+                DIFFICULTY_INTERMEDIATE: intermediate_data,
+                DIFFICULTY_EXPERT: expert_data,
             }
             cache.set('cached_highscores', cached_highscores, timeout=HIGHSCORE_CACHE_TIMEOUT)
 
@@ -78,4 +106,3 @@ class GameView(TemplateView):
 
 class ChooseDifficultyView(TemplateView):
     template_name = "minesweeper/choose_difficulty.html"
-
