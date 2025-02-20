@@ -66,14 +66,14 @@ class MinesweeperStats:
         """
         tbv = 0
 
-        for y in range(self.game.width):
-            for x in range(self.game.height):
+        for y in range(self.game.height):
+            for x in range(self.game.width):
                 if (not self._traversed_board[y][x]) and self.game.logic_board[y][x] == 0:
                     self.open_cells_recursively(y, x)
                     tbv += 1
 
-        for y in range(self.game.width):
-            for x in range(self.game.height):
+        for y in range(self.game.height):
+            for x in range(self.game.width):
                 if (not self._traversed_board[y][x]) and self.game.logic_board[y][x] > 0:
                     tbv += 1
 
