@@ -105,6 +105,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/game">Play</a>
                     </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/accounts/profile">Profile</a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="/highscores">High Scores</a>
                     </li>

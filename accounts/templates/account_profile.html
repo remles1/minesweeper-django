@@ -1,6 +1,110 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block headblock %}
+<style>
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .profile-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .stat-card {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+        }
+        .stat-card h3 {
+            margin: 0 0 10px;
+            font-size: 1.5em;
+            color: white;
+        }
+        .stat-card p {
+            margin: 0;
+            font-size: 1.2em;
+            color: white;
+        }
+        .best-game {
+            margin-top: 30px;
+        }
+        .best-game h2 {
+            font-size: 1.8em;
+            color: white;
+            margin-bottom: 10px;
+        }
+        .best-game p {
+            font-size: 1.2em;
+            color: white;
+        }
+</style>
+{% endblock %}
+
 {% block content %}
-hello
+        <div class="profile-header">
+            <h1>{{ profile.player.username }}'s Profile</h1>
+        </div>
+
+        <div class="profile-stats">
+            <div class="stat-card">
+                <h3>Beginner Wins</h3>
+                <p>{{ profile.beginner_wins }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Intermediate Wins</h3>
+                <p>{{ profile.intermediate_wins }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Expert Wins</h3>
+                <p>{{ profile.expert_wins }}</p>
+            </div>
+        </div>
+
+        <div class="best-game">
+            <h2>Best Game Times</h2>
+            <p><strong>Beginner:</strong>
+                {% if profile.beginner_best_game %}
+                    <span class="time-spent">{{ profile.beginner_best_game.time_spent }}</span> seconds
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+            <p><strong>Intermediate:</strong>
+                {% if profile.intermediate_best_game %}
+                    <span class="time-spent">{{ profile.intermediate_best_game.time_spent }}</span> seconds
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+            <p><strong>Expert:</strong>
+                {% if profile.expert_best_game %}
+                    <span class="time-spent">{{ profile.expert_best_game.time_spent }}</span> seconds
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+        </div>
+{% endblock %}
+
+{% block scriptblock %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+            const timeSpentCells = document.querySelectorAll('.time-spent');
+
+            timeSpentCells.forEach(cell => {
+                const originalTime = parseFloat(cell.textContent);
+                if (!isNaN(originalTime)) {
+                    cell.textContent = (originalTime / 1000).toFixed(3);
+                }
+            });
+        });
+</script>
 {% endblock %}
