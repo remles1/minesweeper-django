@@ -43,12 +43,12 @@ def create_profile(sender, instance, created, **kwargs):
     if created:
         ProfileModel.objects.get_or_create(
             player=instance,
-            beginner_best_game=None,
-            beginner_wins=0,
-
-            intermediate_best_game=None,
-            intermediate_wins=0,
-
-            expert_best_game=None,
-            expert_wins=0,
+            defaults={
+                'beginner_best_game': None,
+                'beginner_wins': 0,
+                'intermediate_best_game': None,
+                'intermediate_wins': 0,
+                'expert_best_game': None,
+                'expert_wins': 0,
+            }
         )
