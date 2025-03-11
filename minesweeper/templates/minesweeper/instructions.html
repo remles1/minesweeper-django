@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block headblock %}
+{% endblock %}
+
+{% block content %}
+        <div class="game-container">
+            <h2>How to Play Minesweeper</h2>
+            <p><strong>Objective:</strong> The goal of Minesweeper is to clear a rectangular board containing hidden "mines" without detonating any of them.</p>
+
+            <h3>Game Rules:</h3>
+            <ul>
+                <li><strong>Left-Click:</strong> Reveal a tile. If it's a mine, the game ends. If it's safe, a number will appear indicating how many mines are adjacent to that tile.</li>
+                <li><strong>Right-Click:</strong> Flag a tile you suspect contains a mine. This helps you keep track of potential mines.</li>
+                <li><strong>Numbers:</strong> The numbers on the tiles indicate how many mines are in the adjacent tiles (up, down, left, right, and diagonally).</li>
+                <li><strong>Winning:</strong> You win the game by revealing all non-mine tiles without clicking on any mines.</li>
+            </ul>
+
+            <h3>Tips:</h3>
+            <ul>
+                <li>Start by clicking on a tile in the middle of the board. This gives you the best chance of opening up a large area.</li>
+                <li>Use the numbers to deduce where mines are located. If a tile shows "1" and there is only one adjacent unrevealed tile, that tile must be a mine.</li>
+                <li>Flag tiles you are certain contain mines to avoid accidentally clicking on them.</li>
+            </ul>
+
+            <p><strong>Note:</strong> Minesweeper is a game of logic and patience. Take your time to analyze the board and make informed decisions.</p>
+        </div>
+
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.http import Http404
+from django.shortcuts import redirect
 from django.views.generic import TemplateView
 
 from minesweeper.config import difficulty_mapping, DIFFICULTY_BEGINNER, DIFFICULTY_INTERMEDIATE, DIFFICULTY_EXPERT, \
@@ -10,6 +11,14 @@ from minesweeper.models import Highscore, GameStats
 
 class IndexView(TemplateView):
     template_name = "minesweeper/index.html"
+
+
+class InstructionsView(TemplateView):
+    template_name = "minesweeper/instructions.html"
+
+
+def about(request):
+    return redirect("https://github.com/remles1")
 
 
 class HighscoresView(TemplateView):

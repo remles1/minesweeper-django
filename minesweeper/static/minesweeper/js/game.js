@@ -54,7 +54,7 @@ let fastMode = getCookie('fastMode') === 'true';
 
 const fastModeButton = document.getElementById('toggleButton');
 
-fastModeButton.textContent = `Fast Mode: ${fastMode ? "ON" : "OFF"}`;
+fastModeButton.textContent = `One button mode: ${fastMode ? "ON" : "OFF"}`;
 
 // Add click event listener
 fastModeButton.addEventListener('click', () => {
@@ -62,7 +62,7 @@ fastModeButton.addEventListener('click', () => {
     fastMode = !fastMode;
 
     // Update the button text
-    fastModeButton.textContent = `Fast Mode: ${fastMode ? "ON" : "OFF"}`;
+    fastModeButton.textContent = `One button mode: ${fastMode ? "ON" : "OFF"}`;
     setCookie('fastMode', fastMode, 7);
 });
 

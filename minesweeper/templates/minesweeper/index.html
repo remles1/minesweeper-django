@@ -1,17 +1,33 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block headblock %}
+
+<style>
+    .container{
+        width: 1000px;
+    }
+</style>
+
+{% endblock %}
+
 {% block content %}
 
-<div class="d-flex">
-    {% if request.user.is_authenticated %}
-        <p>Welcome, {{ request.user.username }}!</p>
-    {% else %}
-        <p>Please log in.</p>
-    {% endif %}
-</div>
+    <div class="container">
 
-
+        <div class="info">
+            <h2 style="text-align: center">Minesweeper</h2>
+            <p style="text-align: left">Minesweeper is a single-player puzzle video game that originated in the 1960s. The objective of the game is to clear a rectangular board containing hidden "mines" without detonating any of them. The game provides clues about the number of neighboring mines in each field, helping the player to deduce which squares are safe to click.</p>
+            <p style="text-align: left">Here are some key features of Minesweeper:</p>
+            <ul>
+                <li><strong>Grid Layout:</strong> The game is played on a grid of squares, some of which contain mines.</li>
+                <li><strong>Numbers:</strong> When you click on a safe square, it reveals a number indicating how many mines are adjacent to that square.</li>
+                <li><strong>Flags:</strong> You can mark squares you suspect contain mines with a flag to avoid clicking on them.</li>
+                <li><strong>Winning:</strong> You win the game by successfully revealing all the squares that do not contain mines.</li>
+            </ul>
+            <p style="text-align: left">Minesweeper is a great way to sharpen your logical thinking and problem-solving skills. It's easy to learn but challenging to master!</p>
+        </div>
+    </div>
 
 {% endblock %}
 
