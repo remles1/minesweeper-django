@@ -221,7 +221,7 @@ function cellMouseUp(event) {
     }
     leftPressed = false;
 
-    if (this.classList.contains(user_board_dict["0"])) {
+    if (this.classList.contains(user_board_dict["0"]) || this.classList.contains(user_board_dict["f"] )) {
         return;
     }
 
