@@ -12,11 +12,9 @@
 
 
 
-<h3 align="center">Minesweeper</h3>
+<h1 align="center">Minesweeper</h1>
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="readme_assets/gameplay.gif" alt="gameplay" width="200" height="200">
-  </a>
+  <img src="readme_assets/gameplay.gif" alt="gameplay" width="300px" height="auto">
 </div>
 
 <!-- ABOUT THE PROJECT -->
@@ -40,6 +38,13 @@ This project is NOT production ready. It's just a hobby project that I made for 
 
 ## Gallery
 
+<div style="display: flex; flex:1; flex-direction: column; justify-content: center">
+	<img src="readme_assets/ms_stats.png" alt="gameplay" width="500px" height="auto">
+	<img src="readme_assets/ms_play.png" alt="gameplay" width="500px" height="auto">
+	<img src="readme_assets/ms1.png" alt="gameplay" width="500px" height="auto">
+	<img src="readme_assets/ms_profile.png" alt="gameplay" width="500px" height="auto">
+	<img src="readme_assets/ms_highscores.png" alt="gameplay" width="500px" height="auto">
+</div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
