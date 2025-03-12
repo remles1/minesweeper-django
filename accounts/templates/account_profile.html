@@ -70,21 +70,21 @@
 
         <div class="best-game">
             <h2>Best Game Times</h2>
-            <p><strong>Beginner:</strong>
+            <p style="text-align: left"><strong>Beginner:</strong>
                 {% if profile.beginner_best_game %}
                     <span class="time-spent">{{ profile.beginner_best_game.time_spent }}</span> seconds
                 {% else %}
                     N/A
                 {% endif %}
             </p>
-            <p><strong>Intermediate:</strong>
+            <p style="text-align: left"><strong>Intermediate:</strong>
                 {% if profile.intermediate_best_game %}
                     <span class="time-spent">{{ profile.intermediate_best_game.time_spent }}</span> seconds
                 {% else %}
                     N/A
                 {% endif %}
             </p>
-            <p><strong>Expert:</strong>
+            <p style="text-align: left"><strong>Expert:</strong>
                 {% if profile.expert_best_game %}
                     <span class="time-spent">{{ profile.expert_best_game.time_spent }}</span> seconds
                 {% else %}
