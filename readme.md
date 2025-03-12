@@ -38,7 +38,7 @@ This project is NOT production ready. It's just a hobby project that I made for 
 
 ## Gallery
 
-<div style="display: flex; flex:1; flex-direction: column; justify-content: center">
+<div style="display: flex; flex:1; flex-direction: column; justify-content: center; align-items:center">
 	<img src="readme_assets/ms_stats.png" alt="gameplay" width="500px" height="auto">
 	<img src="readme_assets/ms_play.png" alt="gameplay" width="500px" height="auto">
 	<img src="readme_assets/ms1.png" alt="gameplay" width="500px" height="auto">
