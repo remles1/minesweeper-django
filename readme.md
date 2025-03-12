@@ -22,7 +22,7 @@
 
 An online platform for playing the classic Minesweeper game. Features include post-game statistics, a global leaderboard showcasing top performances, and player profiles with best time tracking.
 
-This project is NOT production ready. It's just a hobby project that I made for educational purposes. Some parts of the code need refactoring, like the websocket consumer which is too bulky, but the project served it's educational purpose and I moved on to more difficult projects now. Apart from the game itself, frontend is pure programmer art.
+This project is NOT production ready. It's just a hobby project that I made for educational purposes. Some parts of the code need refactoring, like for example the websocket consumer which is too bulky. The project served it's educational purpose and I've moved on to more difficult projects now. Apart from the game itself which I carefully put together, frontend is pure programmer art.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
