@@ -38,12 +38,12 @@ This project is NOT production ready. It's just a hobby project that I made for 
 
 ## Gallery
 
-<div style="display: flex; flex:1; flex-direction: column; justify-content: center; align-items:center">
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
 	<img src="readme_assets/ms_stats.png" alt="gameplay" width="500px" height="auto">
-	<img src="readme_assets/ms_play.png" alt="gameplay" width="500px" height="auto">
-	<img src="readme_assets/ms1.png" alt="gameplay" width="500px" height="auto">
-	<img src="readme_assets/ms_profile.png" alt="gameplay" width="500px" height="auto">
-	<img src="readme_assets/ms_highscores.png" alt="gameplay" width="500px" height="auto">
+	<img src="readme_assets/ms_play.png" alt="play" width="500px" height="auto">
+	<img src="readme_assets/ms1.png" alt="one" width="500px" height="auto">
+	<img src="readme_assets/ms_profile.png" alt="profile" width="500px" height="auto">
+	<img src="readme_assets/ms_highscores.png" alt="highscores" width="500px" height="auto">
 </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
